@@ -2,7 +2,7 @@
 This is a repo for the BCI enabled painting project.
 
 # Contribution
-# Contribution will be done primarily through checking out branches for work, followed by pull requests to migrate approved work to the Main branch. 
+Contribution will be done primarily through checking out branches for work, followed by pull requests to migrate approved work to the Main branch. 
 
 # Branch Naming Convention
 # Please indicate which part of the system you are working on as the first word in your branch name. For instance, when working on the python response back end, indicate so by using "python/<mybranch_name>".
