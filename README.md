@@ -1,6 +1,5 @@
-# BCI-Paint
-
-# This is a repo for the BCI enabled painting project.
+# BCI-Paint/n
+This is a repo for the BCI enabled painting project.
 
 # Contribution
 # Contribution will be done primarily through checking out branches for work, followed by pull requests to migrate approved work to the Main branch. 
