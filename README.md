@@ -9,3 +9,20 @@ Please indicate which part of the system you are working on as the first word in
 
 # Requirements 
 Please make sure you create a requirements or environment file that includes all the required libraries and modules. 
+
+# Development Plan
+
+## Specifications
+**Language:** Python
+**Libraries:** Pygame
+
+## Steps
+1.	Research and select a language to develop the application with.
+2.	Research and select the main libraries within the language that will be needed.
+3.	Research other paint applications written in the selected language.
+4.	Determine what features would be nice to have in a paint application.
+5.	Determine how and if the user can be given choice for each feature. Determine the limitations of BCI and if necessary, simplify or reduce the features.
+6.	Create a mock-up of the user interface.
+7.	Develop a prototype paint program that works with keyboard input.
+8.	Integrate the program with the BCI software.
+9.	Test the program and refine the features as necessary.
