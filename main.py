@@ -1,8 +1,5 @@
 from utils import *
 
-WIN = pygame.display.set_mode((DEFAULT_WIDTH, DEFAULT_HEIGHT), pygame.RESIZABLE)
-pygame.display.set_caption("Paint Program")
-
 
 def draw(win, buttons, brush):
     """
@@ -30,12 +27,26 @@ def main():
     run = True
     clock = pygame.time.Clock()
 
+    display_info = pygame.display.Info()
+
+    if display_info.current_h < 0 or display_info.current_w < 0:
+        WIN = pygame.display.set_mode((DEFAULT_WIDTH, DEFAULT_HEIGHT))
+    else:
+        WIN = pygame.display.set_mode((display_info.current_w, display_info.current_h* 0.9))
+    
+    pygame.display.set_caption("Paint Program")
+
     WIN.fill(BG_COLOUR)
 
-    # Draw the colour buttons
+    # Create toolbar headings
+    heading_font = get_font(16)
+    text_surface = heading_font.render("Brush Colours", 1, BLACK)
+    toolbar_text_y = WIN.get_height() - TOOLBAR_HEIGHT + 10
+
+    # Create the colour buttons
     button_height = 50
     button_width = 50
-    button_y = DEFAULT_HEIGHT - TOOLBAR_HEIGHT/2 - button_height/2
+    button_y = WIN.get_height() - (WIN.get_height() - (toolbar_text_y + text_surface.get_height()))/2 - button_height/2
 
     buttons = [
         Button(10, button_y, button_height, button_width, BLACK),
@@ -48,13 +59,10 @@ def main():
         Button(430, button_y, button_height, button_width, PURPLE),
     ]
 
-    # Display Tool bar headings
-    heading_font = get_font(16)
-    text_surface = heading_font.render("Brush Colours", 1, BLACK)
-    WIN.blit(text_surface, (245 - text_surface.get_width()/2, button_y - 10 - text_surface.get_height()))
+    # Draw the tool bar heading
+    WIN.blit(text_surface, (len(buttons) * (button_width + 10)/2 - text_surface.get_width()/2, toolbar_text_y))
 
-    brush = Brush(DEFAULT_WIDTH/2, (DEFAULT_HEIGHT - TOOLBAR_HEIGHT)/2 - BrushSize.MEDIUM.value, BrushSize.MEDIUM.value, BLACK)
-    
+    brush = Brush(WIN.get_width()/2, (WIN.get_height() - TOOLBAR_HEIGHT)/2, BrushSize.MEDIUM.value, BLACK)
 
     while run:
         clock.tick(FPS)
@@ -75,7 +83,7 @@ def main():
 
         keys_pressed = pygame.key.get_pressed()
 
-        brush.handle_movement(keys_pressed)
+        brush.handle_movement(WIN, keys_pressed)
 
         draw(WIN, buttons, brush)
 

@@ -74,7 +74,7 @@ class Brush:
         pygame.draw.circle(win, self.colour, (self.x, self.y), self.radius)
 
 
-    def handle_movement(self, keys_pressed):
+    def handle_movement(self, win, keys_pressed):
         """
         Moves the position of the brush according to the keys that are pressed
 
@@ -85,9 +85,9 @@ class Brush:
         """
         if keys_pressed[pygame.K_LEFT] and self.x - self.vel >= 0:
             self.x -= self.vel
-        if keys_pressed[pygame.K_RIGHT] and self.x + self.vel < DEFAULT_WIDTH:
+        if keys_pressed[pygame.K_RIGHT] and self.x + self.vel < win.get_width():
             self.x += self.vel
         if keys_pressed[pygame.K_UP] and self.y - self.vel > 0:
             self.y -= self.vel
-        if keys_pressed[pygame.K_DOWN]  and self.y + self.vel < DEFAULT_HEIGHT - TOOLBAR_HEIGHT - self.radius:
+        if keys_pressed[pygame.K_DOWN]  and self.y + self.vel < win.get_height() - TOOLBAR_HEIGHT - self.radius:
             self.y += self.vel
