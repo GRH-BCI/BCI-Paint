@@ -1,5 +1,5 @@
 from .settings import *
-from .button import Button
+from .button import *
 from .brush import *
 import pygame
 

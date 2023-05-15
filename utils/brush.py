@@ -59,7 +59,7 @@ class Brush:
         self.y = y
         self.radius = radius
         self.colour = colour
-        self.vel = 8
+        self.vel = 5
 
 
     def draw(self, win):
