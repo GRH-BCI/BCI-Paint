@@ -1,6 +1,7 @@
 from utils import *
+import math
 
-def draw(win, buttons, size_buttons, brush):
+def draw(win, buttons, size_buttons, brush, theta):
     """
     Draws all the elements on the canvas
 
@@ -22,12 +23,42 @@ def draw(win, buttons, size_buttons, brush):
     for button in size_buttons:
         button.draw(win)
 
+    # Draw direction animation
+    direction_animation_y = win.get_height() - TOOLBAR_HEIGHT/2
+    pygame.draw.circle(win, WHITE, (800, direction_animation_y), 40)
+    pygame.draw.circle(win, BLACK, (800, direction_animation_y), 40, 2)
+    
+    r = 35
+    pygame.draw.line(win, BLACK, (800, direction_animation_y), calc_rotation(r, theta, 800, direction_animation_y), 2)
+
     pygame.display.update()
+
+
+def calc_rotation(r, theta, x_center, y_center):
+    """
+    Calculates the x and y position for the end of a line at a given angle
+
+    Parameters:
+    ----------
+    r: int
+        The radial length of the line
+    theta: int
+        The angle of the line in degrees (0 represents up)
+    x_center: int
+        The x coordinate of the point which one end of the line is fixed and the other endpoint rotates around
+    y_center: int
+        The y coordinate of the point which one end of the line is fixed and the other endpoint rotates around
+    """
+    y = math.cos(2*math.pi*theta/360)*r
+    x = math.sin(2*math.pi*theta/360)*r
+    return x + x_center, -(y - y_center)
 
 
 def main():
     run = True
     clock = pygame.time.Clock()
+
+    theta = 0
 
     display_info = pygame.display.Info()
 
@@ -61,7 +92,7 @@ def main():
         Button(310, button_y, button_height, button_width, ORANGE),
         Button(370, button_y, button_height, button_width, GREEN),
         Button(430, button_y, button_height, button_width, PURPLE),
-        Button(750, button_y, button_height, button_width, WHITE, "Save")
+        Button(900, button_y, button_height, button_width, WHITE, "Save")
     ]
 
     size_buttons = [
@@ -92,7 +123,7 @@ def main():
                         continue
 
                     if button.text == "Save":
-                        # Save an image of the canvas before exiting
+                        # Save an image of the canvas
                         painting = WIN.subsurface((0, 0, WIN.get_width(), WIN.get_height() - TOOLBAR_HEIGHT))
                         pygame.image.save(painting, "painting.png")
                     else:
@@ -107,9 +138,11 @@ def main():
 
         keys_pressed = pygame.key.get_pressed()
 
-        brush.handle_movement(WIN, keys_pressed)
+        brush.handle_movement(WIN, keys_pressed, theta)
 
-        draw(WIN, buttons, size_buttons, brush)
+        theta = (theta + 1) % 360
+
+        draw(WIN, buttons, size_buttons, brush, theta)
 
     pygame.quit()
 

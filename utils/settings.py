@@ -14,7 +14,7 @@ PURPLE = (255, 0, 255)
 
 FPS = 60
 
-DEFAULT_WIDTH, DEFAULT_HEIGHT = 800, 700
+DEFAULT_WIDTH, DEFAULT_HEIGHT = 1000, 700
 
 # Specifies the number of rows and columns if using a grid
 ROWS = COLS = 50

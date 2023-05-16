@@ -1,6 +1,6 @@
 from .settings import *
-
 from enum import Enum
+import math
  
 class BrushSize(Enum):
     """
@@ -74,15 +74,20 @@ class Brush:
         pygame.draw.circle(win, self.colour, (self.x, self.y), self.radius)
 
 
-    def handle_movement(self, win, keys_pressed):
+    def handle_movement(self, win, keys_pressed, theta):
         """
-        Moves the position of the brush according to the keys that are pressed
+        Moves the position of the brush on the canvas
 
         Parameters:
         ----------
+        win: Surface
+            The window to move the brush on
         keys_pressed: Sequence[Bool]
-            The state of the keybord keys
+            The state of the keyboard keys
+        theta: int
+            The direction to move the brush if using a single input key (0 is up)
         """
+        # Allows the brush to be move with the 4 arrow keys
         if keys_pressed[pygame.K_LEFT] and self.x - self.vel >= 0:
             self.x -= self.vel
         if keys_pressed[pygame.K_RIGHT] and self.x + self.vel < win.get_width():
@@ -91,3 +96,12 @@ class Brush:
             self.y -= self.vel
         if keys_pressed[pygame.K_DOWN]  and self.y + self.vel < win.get_height() - TOOLBAR_HEIGHT - self.radius:
             self.y += self.vel
+
+        # Allows the brush to be moved with a single input (the w key) using the angle of the line in the direction
+        # animation when the key was pressed
+        if keys_pressed[pygame.K_w]:
+            if 0 <= self.x + math.sin(2*math.pi*theta/360) * self.vel <= win.get_width():
+                self.x += math.sin(2*math.pi*theta/360) * self.vel
+            
+            if 0 <= self.y - math.cos(2*math.pi*theta/360) * self.vel <= win.get_height() - TOOLBAR_HEIGHT - self.radius:
+                self.y -= math.cos(2*math.pi*theta/360) * self.vel
