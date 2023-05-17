@@ -4,6 +4,7 @@ pygame.init()
 pygame.font.init()
 
 BLACK = (0, 0, 0)
+GREY = (100, 100, 100)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
@@ -15,6 +16,8 @@ PURPLE = (255, 0, 255)
 FPS = 60
 
 DEFAULT_WIDTH, DEFAULT_HEIGHT = 1000, 700
+
+COLOUR_CHANGE = pygame.USEREVENT + 1
 
 # Specifies the number of rows and columns if using a grid
 ROWS = COLS = 50

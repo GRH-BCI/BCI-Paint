@@ -1,7 +1,8 @@
 from utils import *
 import math
+import os
 
-def draw(win, buttons, size_buttons, brush, theta):
+def draw(win, buttons, size_buttons, brush, colour_picker, theta):
     """
     Draws all the elements on the canvas
 
@@ -23,13 +24,16 @@ def draw(win, buttons, size_buttons, brush, theta):
     for button in size_buttons:
         button.draw(win)
 
+    colour_picker.update()
+    colour_picker.draw(win)
+
     # Draw direction animation
     direction_animation_y = win.get_height() - TOOLBAR_HEIGHT/2
-    pygame.draw.circle(win, WHITE, (800, direction_animation_y), 40)
-    pygame.draw.circle(win, BLACK, (800, direction_animation_y), 40, 2)
+    pygame.draw.circle(win, WHITE, (1000, direction_animation_y), 40)
+    pygame.draw.circle(win, BLACK, (1000, direction_animation_y), 40, 2)
     
     r = 35
-    pygame.draw.line(win, BLACK, (800, direction_animation_y), calc_rotation(r, theta, 800, direction_animation_y), 2)
+    pygame.draw.line(win, BLACK, (1000, direction_animation_y), calc_rotation(r, theta, 1000, direction_animation_y), 2)
 
     pygame.display.update()
 
@@ -60,6 +64,7 @@ def main():
 
     theta = 0
 
+    # Set the window size to the size of the device screen if possible otherwise use the default width and height
     display_info = pygame.display.Info()
 
     if display_info.current_h < 0 or display_info.current_w < 0:
@@ -92,18 +97,21 @@ def main():
         Button(310, button_y, button_height, button_width, ORANGE),
         Button(370, button_y, button_height, button_width, GREEN),
         Button(430, button_y, button_height, button_width, PURPLE),
-        Button(900, button_y, button_height, button_width, WHITE, "Save")
+        Button(1300, button_y, button_height, button_width, WHITE, "Save")
     ]
 
     size_buttons = [
-        RoundButton(550 + BrushSize.LARGE.value, size_button_y, BrushSize.LARGE.value, BLACK),
-        RoundButton(550 + BrushSize.LARGE.value*2 + BrushSize.MEDIUM.value + 10, size_button_y, BrushSize.MEDIUM.value, BLACK),
-        RoundButton(550 + BrushSize.LARGE.value*2 + BrushSize.MEDIUM.value*2 + BrushSize.SMALL.value + 2*10, size_button_y, BrushSize.SMALL.value, BLACK)
+        RoundButton(1100 + BrushSize.LARGE.value, size_button_y, BrushSize.LARGE.value, BLACK),
+        RoundButton(1100 + BrushSize.LARGE.value*2 + BrushSize.MEDIUM.value + 10, size_button_y, BrushSize.MEDIUM.value, BLACK),
+        RoundButton(1100 + BrushSize.LARGE.value*2 + BrushSize.MEDIUM.value*2 + BrushSize.SMALL.value + 2*10, size_button_y, BrushSize.SMALL.value, BLACK)
     ]
 
     # Draw the toolbar headings
     WIN.blit(brush_colour_heading, (len(buttons) * (button_width + 10)/2 - brush_colour_heading.get_width()/2, toolbar_text_y))
-    WIN.blit(brush_size_heading, (550 + (BrushSize.LARGE.value*2 + BrushSize.MEDIUM.value*2 + BrushSize.SMALL.value + 3*10)/2- brush_size_heading.get_width()/2, toolbar_text_y))
+    WIN.blit(brush_size_heading, (1100 + (BrushSize.LARGE.value*2 + BrushSize.MEDIUM.value*2 + BrushSize.SMALL.value + 3*10)/2- brush_size_heading.get_width()/2, toolbar_text_y))
+
+    # Create the colour picker
+    colour_picker = ColorPicker(510, WIN.get_height() - TOOLBAR_HEIGHT)
 
     brush = Brush(WIN.get_width()/2, (WIN.get_height() - TOOLBAR_HEIGHT)/2, BrushSize.MEDIUM.value, BLACK)
 
@@ -121,13 +129,30 @@ def main():
                 for button in buttons:
                     if not button.clicked(pos):
                         continue
-
+                    
                     if button.text == "Save":
                         # Save an image of the canvas
                         painting = WIN.subsurface((0, 0, WIN.get_width(), WIN.get_height() - TOOLBAR_HEIGHT))
-                        pygame.image.save(painting, "painting.png")
+
+                        # Get a unique name for the painting
+                        filename = "painting.png"
+                        num = 0
+                        while os.path.exists(filename):
+                            num += 1
+                            filename = "painting_" + str(num) + ".png"
+                        
+                        pygame.image.save(painting, filename)
+
                     else:
-                        brush.colour = button.colour
+                        brush.colour = pygame.Color(button.colour)
+
+                # After checking for a colour change indicate which colour was selected
+                for button in buttons:
+                    if button.text != None:
+                        continue
+                    
+                    if brush.colour.r != button.colour.r or brush.colour.g != button.colour.g or brush.colour.b != button.colour.b:
+                        button.selected = False
 
                 # Check if one of the size buttons was clicked
                 for button in size_buttons:
@@ -136,13 +161,20 @@ def main():
 
                     brush.radius = button.radius
 
+                for button in size_buttons:
+                    if brush.radius != button.radius:
+                        button.selected = False
+
+            if event.type == COLOUR_CHANGE:
+                brush.colour.hsla = (colour_picker.hue, colour_picker.sat, colour_picker.light, 100)
+
         keys_pressed = pygame.key.get_pressed()
 
         brush.handle_movement(WIN, keys_pressed, theta)
 
         theta = (theta + 1) % 360
 
-        draw(WIN, buttons, size_buttons, brush, theta)
+        draw(WIN, buttons, size_buttons, brush, colour_picker, theta)
 
     pygame.quit()
 

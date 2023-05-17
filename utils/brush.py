@@ -58,7 +58,7 @@ class Brush:
         self.x = x
         self.y = y
         self.radius = radius
-        self.colour = colour
+        self.colour = pygame.Color(colour)
         self.vel = 5
 
 

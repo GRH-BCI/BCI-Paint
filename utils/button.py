@@ -21,6 +21,8 @@ class Button:
         The text to display on the button
     text_colour: tuple (r, g, b), optional
         The colour of the text on the button. (Default is black)
+    selected: bool
+        Indicates whether the button is selected or not
 
     Methods:
     ----------
@@ -55,9 +57,10 @@ class Button:
         self.y = y
         self.width = width
         self.height = height
-        self.colour = colour
+        self.colour = pygame.Color(colour)
         self.text = text
         self.text_colour = text_colour
+        self.selected = False
 
 
     def draw(self, win):
@@ -71,7 +74,15 @@ class Button:
         """
 
         pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.height))
-        pygame.draw.rect(win, BLACK, (self.x, self.y, self.width, self.height), 2)
+
+        if self.selected:
+            border_colour = BLACK
+        elif self.colour == WHITE:
+            border_colour = GREY
+        else:
+            border_colour = WHITE
+        
+        pygame.draw.rect(win, border_colour, (self.x, self.y, self.width, self.height), 2)
 
         if self.text:
             button_font = get_font(16)
@@ -100,6 +111,8 @@ class Button:
             return False
         if not (y >= self.y and y <= self.y + self.height):
             return False
+        
+        self.selected = True
         
         return True
     
@@ -152,9 +165,10 @@ class RoundButton:
         self.x = x
         self.y = y
         self.radius = radius
-        self.colour = colour
+        self.colour = pygame.Color(colour)
         self.text = text
         self.text_colour = text_colour
+        self.selected = True
 
 
     def draw(self, win):
@@ -168,6 +182,13 @@ class RoundButton:
         """
 
         pygame.draw.circle(win, self.colour, (self.x, self.y), self.radius)
+
+        if self.selected:
+            border_colour = BLACK
+        else:
+            border_colour = WHITE
+        
+        pygame.draw.circle(win, border_colour, (self.x, self.y), self.radius, 2)
 
         if self.text:
             button_font = get_font(16)
@@ -197,5 +218,7 @@ class RoundButton:
 
         if not (math.sqrt(x_sqr + y_sqr) < self.radius):
             return False
+        
+        self.selected = True
         
         return True
