@@ -26,3 +26,11 @@ Please make sure you create a requirements or environment file that includes all
 7.	Develop a prototype paint program that works with keyboard input.
 8.	Integrate the program with the BCI software.
 9.	Test the program and refine the features as necessary.
+
+# Attributions:
+
+## Images:
+
+Images from the following sources are used in the program:
+
+* Paint Palette Icon: <a href="https://www.flaticon.com/free-icons/painting" title="painting icons">Painting icons created by Freepik - Flaticon</a>

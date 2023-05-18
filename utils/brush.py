@@ -88,20 +88,22 @@ class Brush:
             The direction to move the brush if using a single input key (0 is up)
         """
         # Allows the brush to be move with the 4 arrow keys
-        if keys_pressed[pygame.K_LEFT] and self.x - self.vel >= 0:
+        if keys_pressed[pygame.K_LEFT] and self.x - self.vel >= TOOLBAR_HEIGHT + self.radius:
             self.x -= self.vel
         if keys_pressed[pygame.K_RIGHT] and self.x + self.vel < win.get_width():
             self.x += self.vel
         if keys_pressed[pygame.K_UP] and self.y - self.vel > 0:
             self.y -= self.vel
-        if keys_pressed[pygame.K_DOWN]  and self.y + self.vel < win.get_height() - TOOLBAR_HEIGHT - self.radius:
+        if keys_pressed[pygame.K_DOWN]  and self.y + self.vel < win.get_height():
             self.y += self.vel
 
         # Allows the brush to be moved with a single input (the w key) using the angle of the line in the direction
         # animation when the key was pressed
         if keys_pressed[pygame.K_w]:
-            if 0 <= self.x + math.sin(2*math.pi*theta/360) * self.vel <= win.get_width():
+            if TOOLBAR_HEIGHT + self.radius <= self.x + math.sin(2*math.pi*theta/360) * self.vel <= win.get_width():
                 self.x += math.sin(2*math.pi*theta/360) * self.vel
             
-            if 0 <= self.y - math.cos(2*math.pi*theta/360) * self.vel <= win.get_height() - TOOLBAR_HEIGHT - self.radius:
+            if 0 <= self.y - math.cos(2*math.pi*theta/360) * self.vel <= win.get_height():
                 self.y -= math.cos(2*math.pi*theta/360) * self.vel
+
+            pygame.event.post(pygame.event.Event(PAUSE_ROTATION))
