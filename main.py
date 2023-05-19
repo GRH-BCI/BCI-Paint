@@ -77,6 +77,8 @@ def main():
 
     theta = 0
     pause = False
+    rainbow = False
+    hue = 0
 
     # Set the window size to the size of the device screen if possible otherwise use the default width and height
     display_info = pygame.display.Info()
@@ -103,7 +105,8 @@ def main():
         Button(10, 410, button_height, button_width, ORANGE),
         Button(70, 410, button_height, button_width, GREEN),
         Button(130, 410, button_height, button_width, PURPLE),
-        Button(190, 410, button_height, button_width, WHITE, "Save")
+        Button(190, 410, button_height, button_width, WHITE, "Multi"),
+        Button(250, 410, button_height, button_width, WHITE, "Save")
     ]
 
     # Create the colour picker
@@ -130,6 +133,9 @@ def main():
                 # Check if one of the colour buttons or save button was clicked
                 for button in buttons:
                     if not button.clicked(pos):
+                        if button.text != None:
+                            button.selected = False
+                        
                         continue
                     
                     if button.text == "Save":
@@ -145,8 +151,14 @@ def main():
                         
                         pygame.image.save(painting, filename)
 
+                    elif button.text == "Multi":
+                        brush.colour.hsla = (0, 100, 50, 100)
+                        hue = 0
+                        rainbow = True
+
                     else:
                         brush.colour = pygame.Color(button.colour)
+                        rainbow = False
 
                 # After checking for a colour change indicate which colour was selected
                 for button in buttons:
@@ -171,6 +183,7 @@ def main():
             # If a change was made on the colour picker, change the brush colour to the new colour
             if event.type == COLOUR_CHANGE:
                 brush.colour.hsla = (colour_picker.hue, colour_picker.sat, colour_picker.light, 100)
+                rainbow = False
 
             if event.type == PAUSE_ROTATION:
                 pause = True
@@ -180,6 +193,10 @@ def main():
         brush.handle_movement(WIN, keys_pressed, theta)
 
         theta = (theta + 0.5) % 360
+
+        if rainbow:
+            hue = (hue + 1) % 360
+            brush.colour.hsla = (hue, 100, 50, 100)
 
         # if not pause:
         #     theta = (theta + 0.5) % 360
