@@ -1,5 +1,6 @@
 from .settings import *
 import math
+import pygame
 
 class Button:
     """
@@ -33,7 +34,7 @@ class Button:
         Determines if the button was clicked based on the given position 
     """
 
-    def __init__(self, x, y, width, height, colour, text=None, text_colour=BLACK) -> None:
+    def __init__(self, x, y, width, height, colour, selected=False, text=None, text_colour=BLACK) -> None:
         """
         Parameters:
         ----------
@@ -47,6 +48,8 @@ class Button:
             The height of the button
         colour: tuple (r: int, g,: int b: int)
             The colour of the button
+        selected: bool
+            Indicates whether the button is selected or not
         text: str, optional
             The text to display on the button
         text_colour: tuple (r: int, g,: int b: int), optional
@@ -60,7 +63,7 @@ class Button:
         self.colour = pygame.Color(colour)
         self.text = text
         self.text_colour = text_colour
-        self.selected = False
+        self.selected = selected
 
 
     def draw(self, win):
@@ -134,6 +137,8 @@ class RoundButton:
         The text to display on the button
     text_colour: tuple (r, g, b), optional
         The colour of the text on the button. (Default is black)
+    selected: bool
+        Indicates whether the button is selected or not
 
     Methods:
     ----------
@@ -144,7 +149,7 @@ class RoundButton:
         Determines if the button was clicked based on the given position 
     """
 
-    def __init__(self, x, y, radius, colour, text=None, text_colour=BLACK) -> None:
+    def __init__(self, x, y, radius, colour, selected=False, text=None, text_colour=BLACK) -> None:
         """
         Parameters:
         ----------
@@ -156,6 +161,8 @@ class RoundButton:
             The radius of the button
         colour: tuple (r, g, b)
             The colour of the button
+        selected: bool
+            Indicates whether the button is selected or not
         text: str, optional
             The text to display on the button
         text_colour: tuple (r, g, b), optional
@@ -168,7 +175,7 @@ class RoundButton:
         self.colour = pygame.Color(colour)
         self.text = text
         self.text_colour = text_colour
-        self.selected = True
+        self.selected = selected
 
 
     def draw(self, win):
@@ -222,3 +229,92 @@ class RoundButton:
         self.selected = True
         
         return True
+    
+
+class SliderButton:
+    """
+    A class used to represent a slider button
+
+    Attributes:
+    ----------
+    x: int
+        The x coordinate of the top left of the slider button
+    y: int
+        The y coordinate of the top left of the slider button
+    high: int
+        The upper bound for the value of the slider
+    low: int
+        The lower bound for the value of the slider
+    circle_x:
+        The x position of the circle on the slider
+    circle_r:
+        The radius of the circle on the slider
+    value:
+        The value of the slider (between high and low)
+    inner_bound:
+        The rectangle which the slider moves over
+    outer_bound:
+        The rectangle which encapsulates the slider (circle) and the inner rectangle
+
+    Methods:
+    ----------
+    draw(win)
+        Draws the slider on the canvas
+
+    update()
+        Checks if the slider was changed and updates the value 
+    """
+
+    def __init__(self, x, y, w, h, high, low):
+        """
+        Parameters:
+        ----------
+        x: int
+            The x coordinate of the top left of the slider button
+        y: int
+            The y coordinate of the top left of the slider button
+        w: int
+            The width of the slider
+        h:
+            The height of the slider
+        high: int
+            The upper bound for the value of the slider
+        low: int
+            The lower bound for the value of the slider
+        """
+        self.x = x
+        self.y = y
+        self.high = high
+        self.low = low
+        self.circle_x = x
+        self.circle_r = h/2 + 10
+        self.value = low
+        self.inner_bound = pygame.Rect(x, y, w, h)
+        self.outer_bound = pygame.Rect(x - self.circle_r, y - self.circle_r, w + 2* self.circle_r, h + 2* self.circle_r)
+    
+    def draw(self, win):
+        """
+        Draws the slider on the surface
+
+        Parameters:
+        ----------
+        win:
+            The surface to draw the slider on
+        """
+        pygame.draw.rect(win, (255, 255, 255), self.outer_bound)
+        pygame.draw.rect(win, (0, 0, 0), self.inner_bound)
+        pygame.draw.circle(win, (200, 200, 200), (self.circle_x, (self.inner_bound.h / 2 + self.inner_bound.y)), self.circle_r)
+
+    def update(self):
+        """
+        Checks if the slider has been changed and updates the value of the slider
+
+        Parameters:
+        None
+        """
+        mouse_pressed = pygame.mouse.get_pressed()
+        x, y = pygame.mouse.get_pos()
+
+        if mouse_pressed[0] and self.inner_bound.left <= x <= self.inner_bound.right and self.inner_bound.top <= y <= self.inner_bound.bottom:
+            self.circle_x = x
+            self.value = int((x - self.inner_bound.x) / float(self.inner_bound.w) * (self.high - self.low) + self.low)
