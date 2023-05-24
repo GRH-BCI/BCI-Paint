@@ -265,7 +265,7 @@ class SliderButton:
         Checks if the slider was changed and updates the value 
     """
 
-    def __init__(self, x, y, w, h, high, low):
+    def __init__(self, x, y, w, h, high, low, start):
         """
         Parameters:
         ----------
@@ -281,14 +281,16 @@ class SliderButton:
             The upper bound for the value of the slider
         low: int
             The lower bound for the value of the slider
+        start: int
+            The value for the slider to start at
         """
         self.x = x
         self.y = y
         self.high = high
         self.low = low
-        self.circle_x = x
+        self.circle_x = x + start / (high - low) * w
         self.circle_r = h/2 + 10
-        self.value = low
+        self.value = start
         self.inner_bound = pygame.Rect(x, y, w, h)
         self.outer_bound = pygame.Rect(x - self.circle_r, y - self.circle_r, w + 2* self.circle_r, h + 2* self.circle_r)
     
@@ -317,4 +319,4 @@ class SliderButton:
 
         if mouse_pressed[0] and self.inner_bound.left <= x <= self.inner_bound.right and self.inner_bound.top <= y <= self.inner_bound.bottom:
             self.circle_x = x
-            self.value = int((x - self.inner_bound.x) / float(self.inner_bound.w) * (self.high - self.low) + self.low)
+            self.value = float(float(x - self.inner_bound.x) / float(self.inner_bound.w) * (self.high - self.low) + self.low)

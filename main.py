@@ -2,7 +2,7 @@ from utils import *
 import math
 import os
 
-def draw(win, buttons, size_buttons, speed_slider, brush, colour_picker, theta):
+def draw(win, buttons, size_buttons, brush_speed_slider, clock_speed_slider, brush, colour_picker, theta):
     """
     Draws all the elements on the canvas
 
@@ -26,12 +26,14 @@ def draw(win, buttons, size_buttons, speed_slider, brush, colour_picker, theta):
         brush_colour_heading = heading_font.render("Brush Colour", 1, BLACK)
         brush_size_heading = heading_font.render("Brush Size", 1, BLACK)
         mode_heading = heading_font.render("Mode", 1, BLACK)
-        speed_heading = heading_font.render("Brush Speed", 1, BLACK)
+        brush_speed_heading = heading_font.render("Brush Speed", 1, BLACK)
+        clock_speed_heading = heading_font.render("Clock Speed", 1, BLACK)
         # Draw the toolbar headings
         win.blit(brush_colour_heading, (10, 320))
         win.blit(brush_size_heading, (10, 580))
         win.blit(mode_heading, (10, 680))
-        win.blit(speed_heading, (200, 580))
+        win.blit(brush_speed_heading, (200, 580))
+        win.blit(clock_speed_heading, (10, 10))
 
         for button in buttons:
             button.draw(win)
@@ -42,8 +44,11 @@ def draw(win, buttons, size_buttons, speed_slider, brush, colour_picker, theta):
         colour_picker.update()
         colour_picker.draw(win)
 
-        speed_slider.update()
-        speed_slider.draw(win)
+        brush_speed_slider.update()
+        brush_speed_slider.draw(win)
+
+        clock_speed_slider.update()
+        clock_speed_slider.draw(win)
 
     # Draw direction animation
     pygame.draw.circle(win, WHITE, (TOOLBAR_HEIGHT//2, 160), 150)
@@ -130,10 +135,11 @@ def main():
         RoundButton(10 + BrushSize.LARGE.value*2 + BrushSize.MEDIUM.value + 10, 610 + BrushSize.LARGE.value, BrushSize.MEDIUM.value, BLACK, selected=True),
         RoundButton(10 + BrushSize.LARGE.value*2 + BrushSize.MEDIUM.value*2 + BrushSize.SMALL.value + 2*10, 610 + BrushSize.LARGE.value, BrushSize.SMALL.value, BLACK, selected=False)
     ]
+    
+    brush_speed_slider = SliderButton(220, 630, 90, 20, 100, 5, 5)
+    clock_speed_slider = SliderButton(25, 50, 40, 10, 1, 0, 0.5)
 
-    speed_slider = SliderButton(220, 630, 90, 20, 100, 5)
-
-    brush = Brush(WIN.get_width()/2, (WIN.get_height() - TOOLBAR_HEIGHT)/2, BrushSize.MEDIUM.value, BLACK)
+    brush = Brush((WIN.get_width() - TOOLBAR_HEIGHT)/2 + TOOLBAR_HEIGHT, WIN.get_height()/2, BrushSize.MEDIUM.value, BLACK)
 
     while run:
         clock.tick(FPS)
@@ -219,9 +225,9 @@ def main():
         if mode == "Game" and keys_pressed[pygame.K_w]:
             move = True
             counter = 0
-            brush.vel = speed_slider.value
+            brush.vel = brush_speed_slider.value
         elif mode == "Casual":
-            brush.vel = speed_slider.value
+            brush.vel = brush_speed_slider.value
 
         # In game mode the brush should continuously move for 300 iterations of the loop after the w key is pressed
         if move == True:    
@@ -238,7 +244,7 @@ def main():
 
         brush.handle_movement(WIN, keys_pressed, theta, mode, move)
 
-        theta = (theta + 0.5) % 360
+        theta = (theta + clock_speed_slider.value) % 360
 
         # If the multicolor button is selected consistently change the hue
         if rainbow:
@@ -250,7 +256,7 @@ def main():
         
         # pause = False
 
-        draw(WIN, buttons, size_buttons, speed_slider, brush, colour_picker, theta)
+        draw(WIN, buttons, size_buttons, brush_speed_slider, clock_speed_slider, brush, colour_picker, theta)
 
     pygame.quit()
 
