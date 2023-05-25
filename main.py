@@ -51,9 +51,9 @@ def draw(win, buttons, size_buttons, brush_speed_slider, clock_speed_slider, bru
         clock_speed_slider.draw(win)
 
     # Draw direction animation
-    pygame.draw.circle(win, WHITE, (TOOLBAR_HEIGHT//2, 160), 150)
-    pygame.draw.circle(win, BLACK, (TOOLBAR_HEIGHT//2, 160), 150, 15)
-    pygame.draw.circle(win, brush.colour, (TOOLBAR_HEIGHT//2, 160), 135, 5)
+    pygame.draw.circle(win, WHITE, (TOOLBAR_HEIGHT//2, 160), 150) # center of the clock
+    pygame.draw.circle(win, BLACK, (TOOLBAR_HEIGHT//2, 160), 150, 15) # Border of the clock
+    pygame.draw.circle(win, brush.colour, (TOOLBAR_HEIGHT//2, 160), 135, 5) # Coloured inside border of the clock
     
     r = 125
     pygame.draw.line(win, BLACK, (TOOLBAR_HEIGHT//2, 160), calc_rotation(r, theta, TOOLBAR_HEIGHT//2, 160), 10)
