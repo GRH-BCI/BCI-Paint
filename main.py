@@ -82,8 +82,8 @@ class Window(QMainWindow):
         self.brush_speed = self.brushSize/2
 
         # Initializing the position of the brush
-        self.x = self.size().width() // 2
-        self.y = self.size().height() // 2
+        self.x = self.image.size().width() // 2
+        self.y = self.image.size().height() // 2
 
         # Creating the clock animation
         self.clock =  Clock(25, 50, 350)
