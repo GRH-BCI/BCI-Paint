@@ -29,8 +29,17 @@ Please make sure you create a requirements or environment file that includes all
 
 # Attributions:
 
+This program was inspired by the example code from the following source:
+<br>
+https://www.geeksforgeeks.org/pyqt5-create-paint-application/
+
 ## Images:
 
 Images from the following sources are used in the program:
 
 * Paint Palette Icon: <a href="https://www.flaticon.com/free-icons/painting" title="painting icons">Painting icons created by Freepik - Flaticon</a>
+* Marker Icon: <a href="https://www.flaticon.com/free-icons/highlighter" title="highlighter icons">Highlighter icons created by Freepik - Flaticon</a>
+* Watercolour Icon: <a href="https://www.flaticon.com/free-icons/paint-brush" title="paint brush icons">Paint brush icons created by Freepik - Flaticon</a>
+* Spray Paint Icon: <a href="https://www.flaticon.com/free-icons/art-and-design" title="art and design icons">Art and design icons created by Freepik - Flaticon</a>
+* Save Icon: <a href="https://www.flaticon.com/free-icons/save" title="save icons">Save icons created by Freepik - Flaticon</a>
+* Delete Icon: <a href="https://www.flaticon.com/free-icons/delete" title="delete icons">Delete icons created by Freepik - Flaticon</a>
