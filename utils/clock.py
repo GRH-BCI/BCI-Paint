@@ -1,29 +1,41 @@
-from .settings import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 import math
 
 class Clock:
-
-    def __init__(self, x, y, r) -> None:
+    """
+    Represents a clock animation used to determine the direction of the brush
+    """
+    
+    def __init__(self, x, y, r, outer_thickness=16, inner_thickness=8) -> None:
         self.x = x
         self.y = y
         self.r = r
-        self.left = x - r
-        self.right = x + r
-        self.top = y - r
-        self.bottom = y + r
+        self.outer_thickness = outer_thickness
+        self.inner_thickness = inner_thickness
+        self.outer_border = QRect(x, y, r, r)
+        self.inner_border = QRect(x + outer_thickness//2 + inner_thickness//2 - 1, y + outer_thickness//2 + inner_thickness//2 - 1, r - outer_thickness - inner_thickness + 2, r - outer_thickness - inner_thickness + 2)
+        self.arrow = QLineF(x + r//2, y + r//2, x + r//2, y + r//2 + 75)
 
-    def update(self):
-        self.left = self.x - self.r
-        self.right = self.x + self.r
-        self.top = self.y - self.r
-        self.bottom = self.y + self.r
+    def draw(self, qpainter, theta, color):
+        """
+        Draws the clock on the window
+        """
 
-    def draw(self, win, colour, theta):
-        pygame.draw.circle(win, WHITE, (self.x, self.y), self.r) # center of the clock
-        pygame.draw.circle(win, BLACK, (self.x, self.y), self.r, 15) # Border of the clock
-        pygame.draw.circle(win, colour, (self.x, self.y), self.r - 15 , 5) # Coloured inside border of the clock
+        qpainter.setPen(QPen(Qt.black, self.outer_thickness, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
 
-        pygame.draw.line(win, BLACK, (self.x, self.y), self.calc_rotation(self.r - 30, theta, self.x, self.y), 10)
+        # Draw the outer border
+        qpainter.drawEllipse(self.outer_border)
+
+        # Draw the arrow
+        x, y = self.calc_rotation(self.r//2 - 25, theta, self.outer_border.center().x(), self.outer_border.center().y())
+        self.arrow.setP2(QPointF(x, y))
+        qpainter.drawLine(self.arrow)
+
+        qpainter.setPen(QPen(color, self.inner_thickness, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+
+        # Draw the inner border
+        qpainter.drawEllipse(self.inner_border)
 
     def calc_rotation(self, r, theta, x_center, y_center):
         """
