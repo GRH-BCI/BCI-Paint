@@ -1,8 +1,8 @@
 from utils import *
-import math
 import os
+import random
 
-def draw(win, buttons, size_buttons, brush_speed_slider, clock_speed_slider, brush, colour_picker, theta):
+def draw(win, dir_clock, buttons, size_buttons, brush_speed_slider, clock_speed_slider, brush, colour_picker, theta):
     """
     Draws all the elements on the canvas
 
@@ -35,7 +35,8 @@ def draw(win, buttons, size_buttons, brush_speed_slider, clock_speed_slider, bru
         win.blit(brush_speed_heading, (200, 580))
         win.blit(clock_speed_heading, (10, 10))
 
-        for button in buttons:
+        for button in buttons.values():
+            # print(button)
             button.draw(win)
 
         for button in size_buttons:
@@ -51,34 +52,9 @@ def draw(win, buttons, size_buttons, brush_speed_slider, clock_speed_slider, bru
         clock_speed_slider.draw(win)
 
     # Draw direction animation
-    pygame.draw.circle(win, WHITE, (TOOLBAR_HEIGHT//2, 160), 150) # center of the clock
-    pygame.draw.circle(win, BLACK, (TOOLBAR_HEIGHT//2, 160), 150, 15) # Border of the clock
-    pygame.draw.circle(win, brush.colour, (TOOLBAR_HEIGHT//2, 160), 135, 5) # Coloured inside border of the clock
-    
-    r = 125
-    pygame.draw.line(win, BLACK, (TOOLBAR_HEIGHT//2, 160), calc_rotation(r, theta, TOOLBAR_HEIGHT//2, 160), 10)
+    dir_clock.draw(win, brush.colour, theta)
 
     pygame.display.update()
-
-
-def calc_rotation(r, theta, x_center, y_center):
-    """
-    Calculates the x and y position for the end of a line at a given angle
-
-    Parameters:
-    ----------
-    r: int
-        The radial length of the line
-    theta: int
-        The angle of the line in degrees (0 represents up)
-    x_center: int
-        The x coordinate of the point which one end of the line is fixed and the other endpoint rotates around
-    y_center: int
-        The y coordinate of the point which one end of the line is fixed and the other endpoint rotates around
-    """
-    y = math.cos(2*math.pi*theta/360)*r
-    x = math.sin(2*math.pi*theta/360)*r
-    return x + x_center, -(y - y_center)
 
 
 def main():
@@ -100,32 +76,49 @@ def main():
     display_info = pygame.display.Info()
 
     if display_info.current_h < 0 or display_info.current_w < 0:
-        WIN = pygame.display.set_mode((DEFAULT_WIDTH, DEFAULT_HEIGHT))
+        WIN = pygame.display.set_mode((DEFAULT_WIDTH, DEFAULT_HEIGHT), pygame.RESIZABLE)
     else:
-        WIN = pygame.display.set_mode((display_info.current_w, display_info.current_h* 0.90))
+        WIN = pygame.display.set_mode((display_info.current_w, display_info.current_h* 0.90), pygame.RESIZABLE)
     
     pygame.display.set_caption("Paint Program")
 
     WIN.fill(BG_COLOUR)
 
-    # Create the colour buttons and save button
-    button_width = 50
-    button_height = 50
+    dir_clock = Clock(TOOLBAR_HEIGHT//2, WIN.get_height()*(1/5) + PADDING, WIN.get_height()*(1/5))
 
-    buttons = [
-        Button(10, 350, button_width, button_height, BLACK, selected=True),
-        Button(70, 350, button_width, button_height, WHITE),
-        Button(130, 350, button_width, button_height, RED),
-        Button(190, 350, button_width, button_height, YELLOW),
-        Button(250, 350, button_width, button_height, BLUE),
-        Button(10, 410, button_width, button_height, ORANGE),
-        Button(70, 410, button_width, button_height, GREEN),
-        Button(130, 410, button_width, button_height, PURPLE),
-        Button(190, 410, button_width, button_height, WHITE, text="Multi"),
-        Button(250, 410, button_width, button_height, WHITE, text="Save"),
-        Button(10, 710, 100, button_height, WHITE, selected=True, text="Casual"),
-        Button(130, 710, 100, button_height, WHITE, text="Game")
-    ]
+    # Create the colour buttons and save button
+    h = WIN.get_height()*(1/15)
+    w = WIN.get_height()*(1/15)
+
+    black = Button(0 + PADDING, dir_clock.bottom + PADDING, w, h, BLACK, selected=True)
+    white = Button(black.right + PADDING, dir_clock.bottom + PADDING, w, h, WHITE)
+    red = Button(white.right + PADDING, dir_clock.bottom + PADDING, w, h, RED)
+    yellow = Button(red.right + PADDING, dir_clock.bottom + PADDING, w, h, YELLOW)
+    blue = Button(yellow.right + PADDING, dir_clock.bottom + PADDING, w, h, BLUE)
+
+    orange = Button(0 + PADDING, black.bottom + PADDING, w, h, ORANGE)
+    green = Button(orange.right + PADDING, white.bottom + PADDING, w, h, GREEN)
+    purple = Button(green.right + PADDING, red.bottom + PADDING, w, h, PURPLE)
+    multi = Button(purple.right + PADDING, yellow.bottom + PADDING, w, h, WHITE, text="Multi")
+    save = Button(multi.right + PADDING, blue.bottom + PADDING, w, h, WHITE, text="Save")
+
+    casual = Button(0 + PADDING, 710, 2*w, h, WHITE, selected=True, text="Casual")
+    game = Button(casual.right + PADDING, 710, 2*w, h, WHITE, text="Game")
+
+    buttons = {
+        "Black": black,
+        "White": white,
+        "Red": red,
+        "Yellow": yellow,
+        "Blue": blue,
+        "Orange": orange,
+        "Green": green,
+        "Purple": purple,
+        "Multi": multi,
+        "Save": save,
+        "Casual": casual,
+        "Game": game
+    }
 
     # Create the colour picker
     colour_picker = ColorPicker(0, 470)
@@ -148,11 +141,34 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
+            if event.type == pygame.VIDEORESIZE:
+                WIN.fill((255, 255, 255))
+
+                dir_clock.r = WIN.get_height()*(1/5)
+                dir_clock.y = dir_clock.r + PADDING
+                dir_clock.x = TOOLBAR_HEIGHT//2
+                dir_clock.update()
+
+                for id, button in buttons.items():
+                    if id == "Game" or id == "Casual":
+                        button.width = WIN.get_height()*(2/15)
+                        button.height = WIN.get_height()*(1/15)
+                    else:
+                        button.width = WIN.get_height()*(1/15)
+                        button.height = WIN.get_height()*(1/15)
+
+                        if id == "Black" or id == "White" or id == "Red" or id == "Yellow" or id == "Blue":
+                            button.y = dir_clock.bottom + PADDING
+                        else:
+                            button.y = buttons["Black"].bottom + PADDING
+
+                    button.update()
+
             if pygame.mouse.get_pressed()[0]: # LEFT MOUSE BUTTON
                 pos = pygame.mouse.get_pos()
 
                 # Check if one of the colour buttons or save button was clicked
-                for button in buttons:
+                for button in buttons.values():
                     if not button.clicked(pos):
                         if button.text == "Save" or (button.text == "Multi" and rainbow == False):
                             button.selected = False
@@ -180,19 +196,19 @@ def main():
                     elif button.text == "Game":
                         mode = "Game"
                         button.selected = True
-                        buttons[10].selected = False
+                        buttons["Casual"].selected = False
 
                     elif button.text == "Casual":
                         mode = "Casual"
                         button.selected = True
-                        buttons[11].selected = False
+                        buttons["Game"].selected = False
 
                     else:
                         brush.colour = pygame.Color(button.colour)
                         rainbow = False
 
                 # After checking for a colour change indicate which colour was selected
-                for button in buttons:
+                for button in buttons.values():
                     if button.text != None:
                         continue
 
@@ -229,6 +245,17 @@ def main():
         elif mode == "Casual":
             brush.vel = brush_speed_slider.value
 
+            # for i in range(0, 100):
+            #     xo = random.gauss(0, 25)
+            #     yo = random.gauss(0, 25)
+            #     pygame.draw.circle(WIN, brush.colour, (brush.x + xo, brush.y + yo), 1)
+
+            #     a = random.random()
+            #     if a > 0.9:
+            #         for i in range (0, 40):
+            #             pygame.draw.circle(WIN, brush.colour, (brush.x + xo, brush.y + yo + i), 1)
+
+
         # In game mode the brush should continuously move for 300 iterations of the loop after the w key is pressed
         if move == True:    
             counter += 1
@@ -256,7 +283,7 @@ def main():
         
         # pause = False
 
-        draw(WIN, buttons, size_buttons, brush_speed_slider, clock_speed_slider, brush, colour_picker, theta)
+        draw(WIN, dir_clock, buttons, size_buttons, brush_speed_slider, clock_speed_slider, brush, colour_picker, theta)
 
     pygame.quit()
 

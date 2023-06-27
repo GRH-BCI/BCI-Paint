@@ -60,10 +60,20 @@ class Button:
         self.y = y
         self.width = width
         self.height = height
+        self.left = x
+        self.right = x + width
+        self.top = y
+        self.bottom = y + height
         self.colour = pygame.Color(colour)
         self.text = text
         self.text_colour = text_colour
         self.selected = selected
+
+    def update(self):
+        self.left = self.x
+        self.right = self.x + self.width
+        self.top = self.y
+        self.bottom = self.y + self.width
 
 
     def draw(self, win):
