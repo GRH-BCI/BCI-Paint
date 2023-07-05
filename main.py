@@ -6,6 +6,7 @@ import sys
 import math
 import os
 import random
+import ctypes
 from utils import *
  
 class Window(QMainWindow):
@@ -674,7 +675,9 @@ class Window(QMainWindow):
             if action.text() == actionName:
                 action.setDisabled(True)
  
- 
+# Set the icon in the task bar to match the window icon
+myappid = 'GRH_BCI_Paint' # arbitrary string
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
  
 # create pyqt5 app
 App = QApplication(sys.argv)
