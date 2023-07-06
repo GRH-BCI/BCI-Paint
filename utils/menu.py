@@ -133,15 +133,15 @@ def createMenu(win):
     win.bStyleMenu.addAction(sprayPaint)
     sprayPaint.triggered.connect(win.sprayPaint)
 
-    graffiti = QAction("Graffiti", win)
+    graffiti = QAction(QIcon(os.path.join("Assets", "graffiti.png")), "Graffiti", win)
     win.bStyleMenu.addAction(graffiti)
     graffiti.triggered.connect(win.graffiti)
 
-    splatter = QAction("Splatter", win)
+    splatter = QAction(QIcon(os.path.join("Assets", "splatter.png")), "Splatter", win)
     win.bStyleMenu.addAction(splatter)
     splatter.triggered.connect(win.splatter)
 
-    abstract = QAction("Abstract", win)
+    abstract = QAction(QIcon(os.path.join("Assets", "abstract-shape.png")), "Abstract", win)
     win.bStyleMenu.addAction(abstract)
     abstract.triggered.connect(win.abstract)
 
