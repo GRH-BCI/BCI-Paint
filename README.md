@@ -41,5 +41,8 @@ Images from the following sources are used in the program:
 * Marker Icon: <a href="https://www.flaticon.com/free-icons/highlighter" title="highlighter icons">Highlighter icons created by Freepik - Flaticon</a>
 * Watercolour Icon: <a href="https://www.flaticon.com/free-icons/paint-brush" title="paint brush icons">Paint brush icons created by Freepik - Flaticon</a>
 * Spray Paint Icon: <a href="https://www.flaticon.com/free-icons/art-and-design" title="art and design icons">Art and design icons created by Freepik - Flaticon</a>
+* Splatter Icon: <a href="https://www.flaticon.com/free-icons/splatter" title="splatter icons">Splatter icons created by Smashicons - Flaticon</a>
+* Graffiti Icon: <a href="https://www.flaticon.com/free-icons/splatter" title="splatter icons">Splatter icons created by Freepik - Flaticon</a>
+* Abstract Icon: <a href="https://www.flaticon.com/free-icons/square" title="square icons">Square icons created by Freepik - Flaticon</a>
 * Save Icon: <a href="https://www.flaticon.com/free-icons/save" title="save icons">Save icons created by Freepik - Flaticon</a>
 * Delete Icon: <a href="https://www.flaticon.com/free-icons/delete" title="delete icons">Delete icons created by Freepik - Flaticon</a>
