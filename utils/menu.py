@@ -18,19 +18,19 @@ def createMenu(win):
     win.brushMenu = mainMenu.addMenu("Brush")
 
     # Adding brush size submenu to the brush menu
-    win.bSizeMenu = win.brushMenu.addMenu("Brush Size")
+    win.bSizeMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "brush-sizes.png")), "Brush Size")
 
     # Adding brush color submenu to the brush menu
-    win.bColorMenu = win.brushMenu.addMenu("Brush Color")
+    win.bColorMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "colour.png")), "Brush Color")
 
     # Adding a brush style to main menu
-    win.bStyleMenu = win.brushMenu.addMenu("Brush Style")
+    win.bStyleMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "paint-tools.png")), "Brush Style")
 
     # Adding a brush speed to main menu
-    win.bSpeedMenu = win.brushMenu.addMenu("Brush Speed")
+    win.bSpeedMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "brush-speed.png")), "Brush Speed")
 
     # Adding a line style to main menu
-    win.lStyleMenu = win.brushMenu.addMenu("Line Style")
+    win.lStyleMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "line-style.png")), "Line Style")
 
     # Adding a mode selection to main menu
     win.modeMenu = mainMenu.addMenu("Mode")
@@ -38,8 +38,11 @@ def createMenu(win):
     # Adding a clock speed selection to main menu
     win.clockSpeedMenu = mainMenu.addMenu("Clock Speed")
 
+    # Adding BCI key selection to main menu
+    # win.BCIKeyMenu = mainMenu.addMenu("BCI Key")
+
     # Adding feedback option to main menu
-    win.feedbackMenu = mainMenu.addMenu("Feedback")
+    # win.feedbackMenu = mainMenu.addMenu("Feedback")
 
     # Creating the save action
     saveAction = QAction(QIcon(os.path.join("Assets", "save.png")), "Save", win)
@@ -54,20 +57,20 @@ def createMenu(win):
 
 
     # Creating options for brush sizes
-    pix_12 = QAction("12px", win)
+    pix_12 = QAction(QIcon(os.path.join("Assets", "12px.png")), "12px", win)
     win.bSizeMenu.addAction(pix_12)
     pix_12.triggered.connect(win.Pixel_12)
     pix_12.setDisabled(True)
 
-    pix_16 = QAction("16px", win)
+    pix_16 = QAction(QIcon(os.path.join("Assets", "16px.png")), "16px", win)
     win.bSizeMenu.addAction(pix_16)
     pix_16.triggered.connect(win.Pixel_16)
 
-    pix_20 = QAction("20px", win)
+    pix_20 = QAction(QIcon(os.path.join("Assets", "20px.png")), "20px", win)
     win.bSizeMenu.addAction(pix_20)
     pix_20.triggered.connect(win.Pixel_20)
 
-    pix_24 = QAction("24px", win)
+    pix_24 = QAction(QIcon(os.path.join("Assets", "24px.png")), "24px", win)
     win.bSizeMenu.addAction(pix_24)
     pix_24.triggered.connect(win.Pixel_24)
 
@@ -129,84 +132,107 @@ def createMenu(win):
     win.bStyleMenu.addAction(watercolor)
     watercolor.triggered.connect(win.watercolor)
 
+    # win.bStyleMenu.addSeparator()
+
     sprayPaint = QAction(QIcon(os.path.join("Assets", "spray-paint.png")), "Spray Paint", win)
     win.bStyleMenu.addAction(sprayPaint)
     sprayPaint.triggered.connect(win.sprayPaint)
 
-    graffiti = QAction("Graffiti", win)
+    graffiti = QAction(QIcon(os.path.join("Assets", "graffiti.png")), "Graffiti", win)
     win.bStyleMenu.addAction(graffiti)
     graffiti.triggered.connect(win.graffiti)
 
-    splatter = QAction("Splatter", win)
+    splatter = QAction(QIcon(os.path.join("Assets", "splatter.png")), "Splatter", win)
     win.bStyleMenu.addAction(splatter)
     splatter.triggered.connect(win.splatter)
 
-    abstract = QAction("Abstract", win)
+    abstract = QAction(QIcon(os.path.join("Assets", "abstract-shape.png")), "Abstract", win)
     win.bStyleMenu.addAction(abstract)
     abstract.triggered.connect(win.abstract)
 
 
     # Creating options for brush speeds
-    bSlow = QAction("Slow", win)
+    bSlow = QAction(QIcon(os.path.join("Assets", "speedometer-slow.png")), "Slow", win)
     win.bSpeedMenu.addAction(bSlow)
     bSlow.triggered.connect(win.bSlow)
 
-    bMedium = QAction("Medium", win)
+    bMedium = QAction(QIcon(os.path.join("Assets", "speedometer-medium.png")), "Medium", win)
     win.bSpeedMenu.addAction(bMedium)
     bMedium.triggered.connect(win.bMedium)
     bMedium.setDisabled(True)
 
-    bFast = QAction("Fast", win)
+    bFast = QAction(QIcon(os.path.join("Assets", "speedometer-fast.png")), "Fast", win)
     win.bSpeedMenu.addAction(bFast)
     bFast.triggered.connect(win.bFast)
 
 
     # Creating options for line styles
-    solid = QAction("Solid", win)
+    solid = QAction(QIcon(os.path.join("Assets", "solid.png")), "Solid", win)
     win.lStyleMenu.addAction(solid)
     solid.triggered.connect(win.solid)
     solid.setDisabled(True)
 
-    dotted = QAction("Dotted", win)
+    dotted = QAction(QIcon(os.path.join("Assets", "dotted.png")), "Dotted", win)
     win.lStyleMenu.addAction(dotted)
     dotted.triggered.connect(win.dotted)
 
 
     # Creating options game modes
-    freestyle = QAction("Freestyle", win)
+    freestyle = QAction(QIcon(os.path.join("Assets", "freestyle.png")), "Freestyle", win)
     win.modeMenu.addAction(freestyle)
     freestyle.triggered.connect(win.freestyle)
     freestyle.setDisabled(True)
 
-    game = QAction("Game", win)
+    game = QAction(QIcon(os.path.join("Assets", "game.png")), "Game", win)
     win.modeMenu.addAction(game)
     game.triggered.connect(win.game)
 
 
     # Creating options for clock speeds
-    stopClock = QAction("Stop", win)
+    stopClock = QAction(QIcon(os.path.join("Assets", "stop.png")), "Stop", win)
     win.clockSpeedMenu.addAction(stopClock)
     stopClock.triggered.connect(win.stopClock)
 
-    cSlow = QAction("Slow", win)
+    cSlow = QAction(QIcon(os.path.join("Assets", "speedometer-slow.png")), "Slow", win)
     win.clockSpeedMenu.addAction(cSlow)
     cSlow.triggered.connect(win.cSlow)
 
-    cMedium = QAction("Medium", win)
+    cMedium = QAction(QIcon(os.path.join("Assets", "speedometer-medium.png")), "Medium", win)
     win.clockSpeedMenu.addAction(cMedium)
     cMedium.triggered.connect(win.cMedium)
     cMedium.setDisabled(True)
 
-    cFast = QAction("Fast", win)
+    cFast = QAction(QIcon(os.path.join("Assets", "speedometer-fast.png")), "Fast", win)
     win.clockSpeedMenu.addAction(cFast)
     cFast.triggered.connect(win.cFast)
 
-    # Creating options for feedback
-    feedbackOn = QAction("On", win)
-    win.feedbackMenu.addAction(feedbackOn)
-    feedbackOn.triggered.connect(win.feedbackOn)
+    cHyperspeed = QAction(QIcon(os.path.join("Assets", "hyperspeed.png")), "Hyperspeed", win)
+    win.clockSpeedMenu.addAction(cHyperspeed)
+    cHyperspeed.triggered.connect(win.cHyperspeed)
 
-    feedbackOff = QAction("Off", win)
-    win.feedbackMenu.addAction(feedbackOff)
-    feedbackOff.triggered.connect(win.feedbackOff)
-    feedbackOff.setDisabled(True)
+    # Creating options for the BCI key
+    # wKey = QAction("W", win)
+    # win.BCIKeyMenu.addAction(wKey)
+    # wKey.triggered.connect(win.setBCIKeyW())
+
+    # aKey = QAction("A", win)
+    # win.BCIKeyMenu.addAction(aKey)
+    # aKey.triggered.connect(win.setBCIkeyA())
+
+    # sKey = QAction("S", win)
+    # win.BCIKeyMenu.addAction(sKey)
+    # sKey.triggered.connect(win.setBCIKeyS())
+
+    # dKey = QAction("D", win)
+    # win.BCIKeyMenu.addAction(dKey)
+    # dKey.triggered.connect(win.setBCIkeyD())
+
+    # Creating options for feedback
+    # feedbackOn = QAction("On", win)
+    # win.feedbackMenu.addAction(feedbackOn)
+    # feedbackOn.triggered.connect(win.feedbackOn)
+
+    # feedbackOff = QAction("Off", win)
+    # win.feedbackMenu.addAction(feedbackOff)
+    # feedbackOff.triggered.connect(win.feedbackOff)
+    # feedbackOff.setDisabled(True)

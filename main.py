@@ -5,7 +5,7 @@ from PyQt5.QtTest import *
 import sys
 import math
 import os
-import random
+import ctypes
 from utils import *
  
 class Window(QMainWindow):
@@ -61,9 +61,17 @@ class Window(QMainWindow):
         self.blinkTimer.timeout.connect(self.blinkBrush)
         self.blinkTimer.start()
 
+        # Set the timer for allow key presses
+        self.allowKey = True
+
+        self.allowKeyTimer = QTimer(self, interval=1)
+        self.allowKeyTimer.timeout.connect(self.allowKeyPress)
+        self.allowKeyTimer.start()
+
         # Initialize the mode to freestyle
         self.mode = Mode.FREESTYLE
 
+        # Initialize feedback mode using the power level to off
         self.feedback = False
  
         # Initial brush size
@@ -89,7 +97,7 @@ class Window(QMainWindow):
         # Creating the clock animation
         self.clock =  Clock(25, 50, 350)
  
-        # QPoint object to tract the point
+        # QPoint object to track the point
         self.lastPoint = QPointF()
 
         # Painter that draws the brush lines on the canvas
@@ -100,313 +108,64 @@ class Window(QMainWindow):
         
 
     def keyPressEvent(self, event):
-        # If the painter is interrupted, restart the painter
-        if self.painter.isActive():
-            self.painter.end()
-        
-        # Creating painter object
-        self.painter = QPainter(self.image)
+        if self.allowKey:
+            self.allowKey = False
+            # If the painter is interrupted, restart the painter
+            if self.painter.isActive():
+                self.painter.end()
             
-        # Set the pen of the painter
-        self.painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-
-        if self.mode == Mode.FREESTYLE:
-            self.brushSpeed = abs(self.brushSpeed)
-            
-            # Change the last point
-            self.lastPoint = QPointF(self.x, self.y)
-
-            # Allow the brush to move with the arrow keys or the w key and the clock animation
-            if event.key() == Qt.Key_Up:
-                # Check if the brush will go beyond the toolbar at the top of the window
-                if self.y - self.brushSpeed < self.brush.height():
-                    self.y = self.brush.height()
-                else:
-                    self.y -= self.brushSpeed
-            
-            elif event.key() == Qt.Key_Down:
-                # Check if the brush will go beyond the bottom of the window
-                if self.y + self.brush.height() + self.brushSpeed > self.imageTools.size().height():
-                    self.y = self.imageTools.size().height() - self.brush.height()
-                else:
-                    self.y += self.brushSpeed
-            
-            elif event.key() == Qt.Key_Left:
-                # Check if the brush will go beyond the toolbar on the left
-                if self.x - self.brushSpeed < 0 + self.brush.width():
-                    self.x = 0 + self.brush.width()
-                else:
-                    self.x -= self.brushSpeed
-            
-            elif event.key() == Qt.Key_Right:
-                # Check if the brush will go beyond the right side of the window
-                if self.x + self.brush.width() + self.brushSpeed > self.imageTools.size().width():
-                    self.x = self.imageTools.size().width() - self.brush.width()//2
-                else:
-                    self.x += self.brushSpeed
-            
-            elif event.key() == Qt.Key_W:
-                # calculate the change in the x and y direction based on the angle
-                deltaX = math.sin(2*math.pi*self.theta/360)*self.brushSpeed
-                deltaY = math.cos(2*math.pi*self.theta/360)*self.brushSpeed
+            # Creating painter object
+            self.painter = QPainter(self.image)
                 
-                # Check if the brush will go beyond the right side of the window
-                if self.x + self.brush.width() + deltaX > self.imageTools.size().width():
-                    self.x = self.imageTools.size().width() - self.brush.width()
-                # Check if the brush will go beyond the toolbar on the left
-                elif self.x + deltaX < 0 + self.brush.width():
-                    self.x = 0 + self.brush.width()
-                else:
-                    self.x += deltaX
+            # Set the pen of the painter
+            self.painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
 
-                # Check if the brush will go beyond the toolbar at the top of the window
-                if self.y - deltaY < self.brush.height():
-                    self.y = self.brush.height()
-                # Check if the brush will go beyond the the bottom of the window
-                elif self.y + self.brush.height() - deltaY > self.imageTools.size().height():
-                    self.y = self.imageTools.size().height() - self.brush.height()
-                else:
-                    self.y -= deltaY
-            
-            # If the spray paint option is chosen it overrides the line style
-            if self.brushStyle == BrushStyle.SPRAYPAINT:
-                # Set the pen of the painter
-                self.painter.setPen(QPen(self.brushColor, 1, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-
-                # Draw the spray
-                for n in range(100):
-                    xo = random.gauss(0, self.brush.width())
-                    yo = random.gauss(0, self.brush.width())
-                    self.painter.drawPoint(int(self.x + xo), int(self.y + yo))
-
-            elif self.brushStyle == BrushStyle.GRAFFITI:
-                # Set the pen of the painter
-                self.painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+            if self.mode == Mode.FREESTYLE:
+                self.brushSpeed = abs(self.brushSpeed)
                 
-                # Draw line from the last point of cursor to the current point
-                self.painter.drawLine(self.lastPoint, QPointF(self.x, self.y))
-
-                # Draw the spray
-                self.painter.setPen(QPen(self.brushColor, 1, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-
-                for n in range(500):
-                    xo = random.gauss(0, self.brush.width())
-                    yo = random.gauss(0, self.brush.width())
-                    self.painter.drawPoint(int(self.x + xo), int(self.y + yo))
-
-                # Draw the drip
-                self.painter.setPen(QPen(self.brushColor, self.brushSize//4, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-
-                drip = random.random()
-                if drip > 0.40 and math.sqrt(yo**2 + xo**2) < self.brush.size().width():
-                    self.painter.drawLine(QPointF(int(self.x + xo), int(self.y + yo)), QPointF(int(self.x + xo), int(self.y + yo + 100*random.random())))
-            
-            elif self.brushStyle == BrushStyle.SPLATTER:
-                # Set the pen of the painter
-                self.painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-                
-                # Draw line from the last point of cursor to the current point
-                self.painter.drawLine(self.lastPoint, QPointF(self.x, self.y))
-
-                for n in range(20):
-                    xo = random.gauss(0, self.brush.width()*2)
-                    yo = random.gauss(0, self.brush.width()*2)
-                    self.painter.drawPoint(int(self.x + xo), int(self.y + yo))
-
-            elif self.brushStyle == BrushStyle.ABSTRACT:
-                # Draw the random points
-                for n in range(10*self.brushSize):
-                    xo = random.gauss(0, self.brush.width()*2)
-                    yo = random.gauss(0, self.brush.width()*2)
-
-                    splatterSize = 1/math.sqrt(xo**2 + yo**2)*5
-                    self.painter.setPen(QPen(self.brushColor, splatterSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-                    self.painter.drawPoint(int(self.x + xo), int(self.y + yo))
-
-            elif self.lineStyle == LineStyle.DOTTED:
-                # Set the pen of the painter
-                self.painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-                
-                # Draw a point around the current brush position
-                self.painter.drawPoint(QPointF(self.x, self.y))
-
-            else:
-                # Set the pen of the painter
-                self.painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-                
-                # Draw line from the last point of cursor to the current point
-                self.painter.drawLine(self.lastPoint, QPointF(self.x, self.y))
-            
-            self.update()
-
-        elif self.mode == Mode.GAME:
-            # Calculate the change in the x and y direction based on the angle
-            deltaX = math.sin(2*math.pi*self.theta/360)*self.brushSpeed
-            deltaY = math.cos(2*math.pi*self.theta/360)*self.brushSpeed
-
-            self.brushSpeed = abs(self.brushSpeed)
-
-            for i in range(0, 300):
-                if self.painter.isActive() == False:
-                    break
-
-                # Slow the brush down over time
-                if i > 150:
-                    deltaY = deltaY*0.99
-                    deltaX = deltaX*0.99
-    
                 # Change the last point
                 self.lastPoint = QPointF(self.x, self.y)
 
-                # Allow the brush to move with the arrow keys or the w key and the clock animation
-                if event.key() == Qt.Key_Up:
-                    # Check if the brush will go beyond the toolbar at the top of the window
-                    if self.y - self.brushSpeed < self.brush.height():
-                        self.y = self.brush.height()
-                        self.brushSpeed = -self.brushSpeed
-                    # Check if the brush will go beyond the bottom of the window
-                    elif self.y + self.brush.height() - self.brushSpeed > self.imageTools.size().height():
-                        self.y = self.imageTools.size().height() - self.brush.height()
-                        self.brushSpeed = -self.brushSpeed
-                    else:
-                        self.y -= self.brushSpeed
+                # Calculate the change in the x and y direction based on the angle
+                deltaX = math.sin(2*math.pi*self.theta/360)*self.brushSpeed
+                deltaY = math.cos(2*math.pi*self.theta/360)*self.brushSpeed
+
+                handleBrushMovement(self, event, deltaX, deltaY)
+
+                drawStroke(self)
                 
-                elif event.key() == Qt.Key_Down:
-                    # Check if the brush will go beyond the bottom of the window
-                    if self.y + self.brush.height() + self.brushSpeed > self.imageTools.size().height():
-                        self.y = self.imageTools.size().height() - self.brush.height()
-                        self.brushSpeed = -self.brushSpeed
-                    # Check if the brush will go beyond the toolbar at the top of the window
-                    elif self.y + self.brushSpeed < self.brush.height():
-                        self.y = self.brush.height()
-                        self.brushSpeed = -self.brushSpeed
-                    else:
-                        self.y += self.brushSpeed
-                
-                elif event.key() == Qt.Key_Left:
-                    # Check if the brush will go beyond the toolbar on the left
-                    if self.x - self.brushSpeed < 0 + self.brush.width():
-                        self.x = 0 + self.brush.width()
-                        self.brushSpeed = -self.brushSpeed
-                    # Check if the brush will go beyond the right side of the window
-                    elif self.x + self.brush.width() - self.brushSpeed > self.imageTools.size().width():
-                        self.x = self.imageTools.size().width() - self.brush.width()
-                        self.brushSpeed = -self.brushSpeed
-                    else:
-                        self.x -= self.brushSpeed
-                
-                elif event.key() == Qt.Key_Right:
-                    # Check if the brush will go beyond the right side of the window
-                    if self.x + self.brush.width() + self.brushSpeed > self.imageTools.size().width():
-                        self.x = self.imageTools.size().width() - self.brush.width()
-                        self.brushSpeed = -self.brushSpeed
-                    # Check if the brush will go beyond the toolbar on the left
-                    elif self.x + self.brushSpeed < 0 + self.brush.width():
-                        self.x = 0 + self.brush.width()
-                        self.brushSpeed = -self.brushSpeed
-                    else:
-                        self.x += self.brushSpeed
-                
-                elif event.key() == Qt.Key_W:
-                    # Check if the brush will go beyond the right side of the window
-                    if self.x + self.brush.width() + deltaX > self.imageTools.size().width():
-                        self.x = self.imageTools.size().width() - self.brush.width()
-                        deltaX = -deltaX
-                    # Check if the brush will go beyond the toolbar on the left
-                    elif self.x + deltaX < 0 + self.brush.width():
-                        self.x = 0 + self.brush.width()
-                        deltaX = -deltaX
-                    else:
-                        self.x += deltaX
-
-                    # Check if the brush will go beyond the toolbar at the top of the window
-                    if self.y - deltaY < self.brush.height():
-                        self.y = self.brush.height()
-                        deltaY = -deltaY
-                    # Check if the brush will go beyond the the bottom of the window
-                    elif self.y + self.brush.height() - deltaY > self.imageTools.size().height():
-                        self.y = self.imageTools.size().height() - self.brush.height()
-                        deltaY = -deltaY
-                    else:
-                        self.y -= deltaY
-
-                # If the spray paint option is chosen it overrides the line style
-                if self.brushStyle == BrushStyle.SPRAYPAINT:
-                    # Set the pen of the painter
-                    self.painter.setPen(QPen(self.brushColor, 1, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-
-                    # Draw the spray
-                    for n in range(100):
-                        xo = random.gauss(0, self.brush.width())
-                        yo = random.gauss(0, self.brush.width())
-                        self.painter.drawPoint(int(self.x + xo), int(self.y + yo))
-
-                elif self.brushStyle == BrushStyle.GRAFFITI:
-                    # Set the pen of the painter
-                    self.painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-                    
-                    # Draw line from the last point of cursor to the current point
-                    self.painter.drawLine(self.lastPoint, QPointF(self.x, self.y))
-
-                    # Draw the spray
-                    self.painter.setPen(QPen(self.brushColor, 1, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-
-                    for n in range(500):
-                        xo = random.gauss(0, self.brush.width())
-                        yo = random.gauss(0, self.brush.width())
-                        self.painter.drawPoint(int(self.x + xo), int(self.y + yo))
-
-                    # Draw the drip
-                    self.painter.setPen(QPen(self.brushColor, self.brushSize//4, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-
-                    drip = random.random()
-                    if drip > 0.40 and math.sqrt(yo**2 + xo**2) < self.brush.size().width():
-                        self.painter.drawLine(QPointF(int(self.x + xo), int(self.y + yo)), QPointF(int(self.x + xo), int(self.y + yo + 100*random.random())))
-
-                elif self.brushStyle == BrushStyle.SPLATTER:
-                    # Set the pen of the painter
-                    self.painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-                    
-                    # Draw line from the last point of cursor to the current point
-                    self.painter.drawLine(self.lastPoint, QPointF(self.x, self.y))
-
-                    for n in range(20):
-                        xo = random.gauss(0, self.brush.width()*2)
-                        yo = random.gauss(0, self.brush.width()*2)
-                        self.painter.drawPoint(int(self.x + xo), int(self.y + yo))
-
-                elif self.brushStyle == BrushStyle.ABSTRACT:
-                    # Draw the random points
-                    for n in range(10*self.brushSize):
-                        xo = random.gauss(0, self.brush.width()*2)
-                        yo = random.gauss(0, self.brush.width()*2)
-
-                        splatterSize = 1/math.sqrt(xo**2 + yo**2)*5
-                        self.painter.setPen(QPen(self.brushColor, splatterSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-                        self.painter.drawPoint(int(self.x + xo), int(self.y + yo))
-
-
-                elif self.lineStyle == LineStyle.DOTTED:
-                    # Set the pen of the painter
-                    self.painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-                    
-                    # Draw a point around the current brush position
-                    self.painter.drawPoint(QPointF(self.x, self.y))
-
-                else:
-                    # Set the pen of the painter
-                    self.painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-                            
-                    # Draw line from the last point of cursor to the current point
-                    self.painter.drawLine(self.lastPoint, QPointF(self.x, self.y))
-                    
                 self.update()
 
-                # Add a pause so the animation is visible
-                QTest.qWait(15)
+            elif self.mode == Mode.GAME:
+                # Calculate the change in the x and y direction based on the angle
+                deltaX = math.sin(2*math.pi*self.theta/360)*self.brushSpeed
+                deltaY = math.cos(2*math.pi*self.theta/360)*self.brushSpeed
 
-        if self.painter.isActive():
-            self.painter.end()
+                self.brushSpeed = abs(self.brushSpeed)
+
+                for i in range(0, 300):
+                    if self.painter.isActive() == False:
+                        break
+
+                    # Slow the brush down over time
+                    if i > 150:
+                        deltaY = deltaY*0.99
+                        deltaX = deltaX*0.99
+        
+                    # Change the last point
+                    self.lastPoint = QPointF(self.x, self.y)
+
+                    deltaX, deltaY = handleBrushMovement(self, event, deltaX, deltaY)
+
+                    drawStroke(self)
+                    
+                    self.update()
+
+                    # Add a pause so the animation is visible
+                    QTest.qWait(15)
+
+            if self.painter.isActive():
+                self.painter.end()
  
 
     def paintEvent(self, event):
@@ -584,18 +343,26 @@ class Window(QMainWindow):
         self.disableSelection(self.bStyleMenu, "Watercolor")
 
     def sprayPaint(self):
+        self.alpha = 255
+        self.brushColor = QColor(self.brushColor.red(), self.brushColor.green(), self.brushColor.blue(), self.alpha)
         self.brushStyle = BrushStyle.SPRAYPAINT
         self.disableSelection(self.bStyleMenu, "Spray Paint")
 
     def graffiti(self):
+        self.alpha = 255
+        self.brushColor = QColor(self.brushColor.red(), self.brushColor.green(), self.brushColor.blue(), self.alpha)
         self.brushStyle = BrushStyle.GRAFFITI
         self.disableSelection(self.bStyleMenu, "Graffiti")
 
     def splatter(self):
+        self.alpha = 255
+        self.brushColor = QColor(self.brushColor.red(), self.brushColor.green(), self.brushColor.blue(), self.alpha)
         self.brushStyle = BrushStyle.SPLATTER
         self.disableSelection(self.bStyleMenu, "Splatter")
 
     def abstract(self):
+        self.alpha = 255
+        self.brushColor = QColor(self.brushColor.red(), self.brushColor.green(), self.brushColor.blue(), self.alpha)
         self.brushStyle = BrushStyle.ABSTRACT
         self.disableSelection(self.bStyleMenu, "Abstract")
 
@@ -624,10 +391,12 @@ class Window(QMainWindow):
     # Handle the mode actions
     def freestyle(self):
         self.mode = Mode.FREESTYLE
+        self.allowKeyTimer.setInterval(1)
         self.disableSelection(self.modeMenu, "Freestyle")
 
     def game(self):
         self.mode = Mode.GAME
+        self.allowKeyTimer.setInterval(1000)
         self.disableSelection(self.modeMenu, "Game")
 
     # Handle the clock speed actions
@@ -647,14 +416,18 @@ class Window(QMainWindow):
         self.step = 2
         self.disableSelection(self.clockSpeedMenu, "Fast")
 
-    # Handle the feedback actions
-    def feedbackOn(self):
-        self.feedback = True
-        self.disableSelection(self.feedbackMenu, "On")
+    def cHyperspeed(self):
+        self.step = 10
+        self.disableSelection(self.clockSpeedMenu, "Hyperspeed")
 
-    def feedbackOff(self):
-        self.feedback = False
-        self.disableSelection(self.feedbackMenu, "Off")
+    # Handle the feedback actions
+    # def feedbackOn(self):
+    #     self.feedback = True
+    #     self.disableSelection(self.feedbackMenu, "On")
+
+    # def feedbackOff(self):
+    #     self.feedback = False
+    #     self.disableSelection(self.feedbackMenu, "Off")
 
     # Updates the angle of the clock arm
     def updateAngle(self):
@@ -667,6 +440,10 @@ class Window(QMainWindow):
         else:
             self.blink = True
 
+    def allowKeyPress(self):
+        self.allowKey = True
+
+    # Disables the currently selected option in a menu
     def disableSelection(self, menu, actionName):
         for action in menu.actions():
             action.setDisabled(False)
@@ -674,7 +451,10 @@ class Window(QMainWindow):
             if action.text() == actionName:
                 action.setDisabled(True)
  
- 
+
+# Set the icon in the task bar to match the window icon
+myappid = 'GRH_BCI_Paint' # arbitrary string
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
  
 # create pyqt5 app
 App = QApplication(sys.argv)
