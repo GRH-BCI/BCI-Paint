@@ -13,36 +13,47 @@ def createMenu(win):
 
     # Adding a file menu for the save and clear actions
     win.fileMenu = mainMenu.addMenu("File")
+    win.fileMenu.setFont(font)
 
     # Adding a brush menu to the main menu bar
     win.brushMenu = mainMenu.addMenu("Brush")
+    win.brushMenu.setFont(font)
 
     # Adding brush size submenu to the brush menu
     win.bSizeMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "brush-sizes.png")), "Brush Size")
+    win.bSizeMenu.setFont(font)
 
     # Adding brush color submenu to the brush menu
     win.bColorMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "colour.png")), "Brush Color")
+    win.bColorMenu.setFont(font)
 
     # Adding a brush style to main menu
     win.bStyleMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "paint-tools.png")), "Brush Style")
+    win.bStyleMenu.setFont(font)
 
     # Adding a brush speed to main menu
     win.bSpeedMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "brush-speed.png")), "Brush Speed")
+    win.bSpeedMenu.setFont(font)
 
     # Adding a line style to main menu
     win.lStyleMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "line-style.png")), "Line Style")
+    win.lStyleMenu.setFont(font)
 
     # Adding a mode selection to main menu
     win.modeMenu = mainMenu.addMenu("Mode")
+    win.modeMenu.setFont(font)
 
     # Adding a clock speed selection to main menu
     win.clockSpeedMenu = mainMenu.addMenu("Clock Speed")
+    win.clockSpeedMenu.setFont(font)
 
     # Adding BCI key selection to main menu
-    # win.BCIKeyMenu = mainMenu.addMenu("BCI Key")
+    win.BCIKeyMenu = mainMenu.addMenu("BCI Key")
+    win.BCIKeyMenu.setFont(font)
 
     # Adding feedback option to main menu
     # win.feedbackMenu = mainMenu.addMenu("Feedback")
+    # win.feedbackMenu.setFont(font)
 
     # Creating the save action
     saveAction = QAction(QIcon(os.path.join("Assets", "save.png")), "Save", win)
@@ -211,21 +222,22 @@ def createMenu(win):
     cHyperspeed.triggered.connect(win.cHyperspeed)
 
     # Creating options for the BCI key
-    # wKey = QAction("W", win)
-    # win.BCIKeyMenu.addAction(wKey)
-    # wKey.triggered.connect(win.setBCIKeyW())
+    wKey = QAction("W", win)
+    win.BCIKeyMenu.addAction(wKey)
+    wKey.triggered.connect(win.setBCIKeyW)
+    wKey.setDisabled(True)
 
-    # aKey = QAction("A", win)
-    # win.BCIKeyMenu.addAction(aKey)
-    # aKey.triggered.connect(win.setBCIkeyA())
+    aKey = QAction("A", win)
+    win.BCIKeyMenu.addAction(aKey)
+    aKey.triggered.connect(win.setBCIKeyA)
 
-    # sKey = QAction("S", win)
-    # win.BCIKeyMenu.addAction(sKey)
-    # sKey.triggered.connect(win.setBCIKeyS())
+    sKey = QAction("S", win)
+    win.BCIKeyMenu.addAction(sKey)
+    sKey.triggered.connect(win.setBCIKeyS)
 
-    # dKey = QAction("D", win)
-    # win.BCIKeyMenu.addAction(dKey)
-    # dKey.triggered.connect(win.setBCIkeyD())
+    dKey = QAction("D", win)
+    win.BCIKeyMenu.addAction(dKey)
+    dKey.triggered.connect(win.setBCIKeyD)
 
     # Creating options for feedback
     # feedbackOn = QAction("On", win)
