@@ -68,6 +68,9 @@ class Window(QMainWindow):
         self.allowKeyTimer.timeout.connect(self.allowKeyPress)
         self.allowKeyTimer.start()
 
+        # Initialize the BCI key used
+        self.BCIKey = Qt.Key_W
+
         # Initialize the mode to freestyle
         self.mode = Mode.FREESTYLE
 
@@ -316,18 +319,21 @@ class Window(QMainWindow):
             self.brushColor.setAlpha(self.alpha)
 
     def customColor(self):
-        self.brushColor = QColorDialog.getColor()
-        self.rainbow = False
+        color = QColorDialog.getColor(initial=self.brushColor)
 
-        # Set the icon of the custom color to the selected color
-        color = QPixmap(50, 50)
-        color.fill(self.brushColor)
+        if color.isValid():
+            self.brushColor = color
+            self.rainbow = False
 
-        for action in self.bColorMenu.actions():
-            if action.text() == "Custom":
-                action.setIcon(QIcon(color))
+            # Set the icon of the custom color to the selected color
+            color = QPixmap(50, 50)
+            color.fill(self.brushColor)
 
-        self.disableSelection(self.bColorMenu, "")
+            for action in self.bColorMenu.actions():
+                if action.text() == "Custom":
+                    action.setIcon(QIcon(color))
+
+            self.disableSelection(self.bColorMenu, "")
 
     # Handle the brush style actions
     def marker(self):
@@ -420,6 +426,23 @@ class Window(QMainWindow):
         self.step = 10
         self.disableSelection(self.clockSpeedMenu, "Hyperspeed")
 
+    # Handle the BCI key actions
+    def setBCIKeyW(self):
+        self.BCIKey = Qt.Key_W
+        self.disableSelection(self.BCIKeyMenu, "W")
+
+    def setBCIKeyA(self):
+        self.BCIKey = Qt.Key_A
+        self.disableSelection(self.BCIKeyMenu, "A")
+
+    def setBCIKeyS(self):
+        self.BCIKey = Qt.Key_S
+        self.disableSelection(self.BCIKeyMenu, "S")
+
+    def setBCIKeyD(self):
+        self.BCIKey = Qt.Key_D
+        self.disableSelection(self.BCIKeyMenu, "D")
+
     # Handle the feedback actions
     # def feedbackOn(self):
     #     self.feedback = True
@@ -455,14 +478,27 @@ class Window(QMainWindow):
 # Set the icon in the task bar to match the window icon
 myappid = 'GRH_BCI_Paint' # arbitrary string
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
+# Create a style class to make the menu bar icons larger
+class largeIconProxyStyle(QProxyStyle):
+    def pixelMetric(self, QStylePixelMetric, option=None, widget=None):
+
+        if QStylePixelMetric == QStyle.PM_SmallIconSize:
+            return 30
+        else:
+            return QProxyStyle.pixelMetric(self, QStylePixelMetric, option, widget)
  
-# create pyqt5 app
+# Create pyqt5 app
 App = QApplication(sys.argv)
+
+# Set a style to the app
+myStyle = largeIconProxyStyle('Motif')
+App.setStyle(myStyle)
  
-# create the instance of our Window
+# Create the instance of our Window
 window = Window()
  
-# showing the window
+# Showing the window
 window.show()
  
 # start the app

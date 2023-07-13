@@ -98,7 +98,6 @@ def handleBrushMovement(win, event, deltaX, deltaY):
 
     # Allow the brush to move with the arrow keys or the w key and the clock animation
     if event.key() == Qt.Key_Up:
-        # Check for a collision with the top and bottom of the screen
         if handleVerticalMovement(win, win.brushSpeed):
             win.brushSpeed = -win.brushSpeed
     
@@ -114,7 +113,7 @@ def handleBrushMovement(win, event, deltaX, deltaY):
         if handleHorizontalMovement(win, win.brushSpeed):
             win.brushSpeed = -win.brushSpeed
     
-    elif event.key() == Qt.Key_W:
+    elif event.key() == win.BCIKey:
         if handleVerticalMovement(win, deltaY):
             deltaY = -deltaY
         
