@@ -29,9 +29,13 @@ Please make sure you create a requirements or environment file that includes all
 
 # Attributions:
 
-This program was inspired by the example code from the following source:
+This program modifies and extends the example code from the following source:
 <br>
-https://www.geeksforgeeks.org/pyqt5-create-paint-application/
+Article: https://www.geeksforgeeks.org/pyqt5-create-paint-application/
+<br>
+Link to the Author: https://auth.geeksforgeeks.org/user/rakshitarora/articles
+<br>
+Link to License used by geeksforgeeks: https://creativecommons.org/licenses/by-sa/2.0/
 
 ## Images:
 
