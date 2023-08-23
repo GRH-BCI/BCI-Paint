@@ -63,6 +63,8 @@ class Window(QMainWindow):
 
         # Set the timer for allow key presses
         self.allowKey = True
+        # Counts the number of key presses currently being handled
+        self.keyCount = 0
 
         self.allowKeyTimer = QTimer(self, interval=1)
         self.allowKeyTimer.timeout.connect(self.allowKeyPress)
@@ -111,7 +113,9 @@ class Window(QMainWindow):
         
 
     def keyPressEvent(self, event):
-        if self.allowKey:
+        # Allows 50 key presses to be handled at one time
+        if self.allowKey and self.keyCount < 50:
+            self.keyCount += 1
             self.allowKey = False
             # If the painter is interrupted, restart the painter
             if self.painter.isActive():
@@ -166,6 +170,9 @@ class Window(QMainWindow):
 
                     # Add a pause so the animation is visible
                     QTest.qWait(15)
+
+            # When the key press action finishes subtract 1 from the total currently active key presses being handled
+            self.keyCount -= 1
 
             if self.painter.isActive():
                 self.painter.end()
@@ -402,7 +409,7 @@ class Window(QMainWindow):
 
     def game(self):
         self.mode = Mode.GAME
-        self.allowKeyTimer.setInterval(1000)
+        self.allowKeyTimer.setInterval(1000) # Allow 1 key press every second
         self.disableSelection(self.modeMenu, "Game")
 
     # Handle the clock speed actions

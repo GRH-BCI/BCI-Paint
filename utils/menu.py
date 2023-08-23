@@ -27,15 +27,15 @@ def createMenu(win):
     win.bColorMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "colour.png")), "Brush Color")
     win.bColorMenu.setFont(font)
 
-    # Adding a brush style to main menu
+    # Adding a brush style submenu to the brush menu
     win.bStyleMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "paint-tools.png")), "Brush Style")
     win.bStyleMenu.setFont(font)
 
-    # Adding a brush speed to main menu
+    # Adding a brush speed submenu to the brush menu
     win.bSpeedMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "brush-speed.png")), "Brush Speed")
     win.bSpeedMenu.setFont(font)
 
-    # Adding a line style to main menu
+    # Adding a line style submenu to the brush menu
     win.lStyleMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "line-style.png")), "Line Style")
     win.lStyleMenu.setFont(font)
 
