@@ -63,6 +63,8 @@ class Window(QMainWindow):
 
         # Set the timer for allow key presses
         self.allowKey = True
+        # Counts the number of key presses currently being handled
+        self.keyCount = 0
 
         self.allowKeyTimer = QTimer(self, interval=1)
         self.allowKeyTimer.timeout.connect(self.allowKeyPress)
@@ -78,7 +80,7 @@ class Window(QMainWindow):
         self.feedback = False
  
         # Initial brush size
-        self.brushSize = 12
+        self.brushSize = 20
         # Initial brush speed
         self.brushSpeed = self.brushSize
         # Initail brush color
@@ -111,7 +113,11 @@ class Window(QMainWindow):
         
 
     def keyPressEvent(self, event):
-        if self.allowKey:
+        # Allows 50 key presses to be handled at one time. If the keyPressEvent is interrupted by another keyPressEvent,
+        # the current state is saved on the stack. Max 50 states can be saved at a time before they have to be resovled
+        # to prevent a stack overflow error.
+        if self.allowKey and self.keyCount < 50:
+            self.keyCount += 1
             self.allowKey = False
             # If the painter is interrupted, restart the painter
             if self.painter.isActive():
@@ -166,6 +172,9 @@ class Window(QMainWindow):
 
                     # Add a pause so the animation is visible
                     QTest.qWait(15)
+
+            # When the key press action finishes subtract 1 from the total currently active key presses being handled
+            self.keyCount -= 1
 
             if self.painter.isActive():
                 self.painter.end()
@@ -322,52 +331,52 @@ class Window(QMainWindow):
         color = QColorDialog.getColor(initial=self.brushColor)
 
         if color.isValid():
-            self.brushColor = color
+            self.brushColor = QColor(color.red(), color.green(), color.blue(), self.alpha)
             self.rainbow = False
 
             # Set the icon of the custom color to the selected color
-            color = QPixmap(50, 50)
-            color.fill(self.brushColor)
+            colorIcon = QPixmap(50, 50)
+            colorIcon.fill(color)
 
             for action in self.bColorMenu.actions():
                 if action.text() == "Custom":
-                    action.setIcon(QIcon(color))
+                    action.setIcon(QIcon(colorIcon))
 
             self.disableSelection(self.bColorMenu, "")
 
-    # Handle the brush style actions
-    def marker(self):
+    # Handle the paint type actions
+    def acrylic(self):
         self.alpha = 255
         self.brushColor = QColor(self.brushColor.red(), self.brushColor.green(), self.brushColor.blue(), self.alpha)
-        self.brushStyle = BrushStyle.MARKER
-        self.disableSelection(self.bStyleMenu, "Marker")
-    
+        self.disableSelection(self.bPaintTypeMenu, "Acrylic")
+
     def watercolor(self):
         self.alpha = 50
         self.brushColor = QColor(self.brushColor.red(), self.brushColor.green(), self.brushColor.blue(), self.alpha)
-        self.brushStyle = BrushStyle.WATERCOLOR
-        self.disableSelection(self.bStyleMenu, "Watercolor")
+        self.disableSelection(self.bPaintTypeMenu, "Watercolor")
+
+    # Handle the brush style actions
+    def marker(self):
+        self.brushColor = QColor(self.brushColor.red(), self.brushColor.green(), self.brushColor.blue(), self.alpha)
+        self.brushStyle = BrushStyle.MARKER
+        self.disableSelection(self.bStyleMenu, "Marker")
 
     def sprayPaint(self):
-        self.alpha = 255
         self.brushColor = QColor(self.brushColor.red(), self.brushColor.green(), self.brushColor.blue(), self.alpha)
         self.brushStyle = BrushStyle.SPRAYPAINT
         self.disableSelection(self.bStyleMenu, "Spray Paint")
 
     def graffiti(self):
-        self.alpha = 255
         self.brushColor = QColor(self.brushColor.red(), self.brushColor.green(), self.brushColor.blue(), self.alpha)
         self.brushStyle = BrushStyle.GRAFFITI
         self.disableSelection(self.bStyleMenu, "Graffiti")
 
     def splatter(self):
-        self.alpha = 255
         self.brushColor = QColor(self.brushColor.red(), self.brushColor.green(), self.brushColor.blue(), self.alpha)
         self.brushStyle = BrushStyle.SPLATTER
         self.disableSelection(self.bStyleMenu, "Splatter")
 
     def abstract(self):
-        self.alpha = 255
         self.brushColor = QColor(self.brushColor.red(), self.brushColor.green(), self.brushColor.blue(), self.alpha)
         self.brushStyle = BrushStyle.ABSTRACT
         self.disableSelection(self.bStyleMenu, "Abstract")
@@ -402,7 +411,7 @@ class Window(QMainWindow):
 
     def game(self):
         self.mode = Mode.GAME
-        self.allowKeyTimer.setInterval(1000)
+        self.allowKeyTimer.setInterval(1000) # Allow 1 key press every second
         self.disableSelection(self.modeMenu, "Game")
 
     # Handle the clock speed actions
@@ -478,15 +487,6 @@ class Window(QMainWindow):
 # Set the icon in the task bar to match the window icon
 myappid = 'GRH_BCI_Paint' # arbitrary string
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-
-# Create a style class to make the menu bar icons larger
-class largeIconProxyStyle(QProxyStyle):
-    def pixelMetric(self, QStylePixelMetric, option=None, widget=None):
-
-        if QStylePixelMetric == QStyle.PM_SmallIconSize:
-            return 30
-        else:
-            return QProxyStyle.pixelMetric(self, QStylePixelMetric, option, widget)
  
 # Create pyqt5 app
 App = QApplication(sys.argv)

@@ -27,15 +27,19 @@ def createMenu(win):
     win.bColorMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "colour.png")), "Brush Color")
     win.bColorMenu.setFont(font)
 
-    # Adding a brush style to main menu
+    # Adding paint type submenu to the brush menu
+    win.bPaintTypeMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "paint-bucket.png")), "Paint Type")
+    win.bPaintTypeMenu.setFont(font)
+
+    # Adding a brush style submenu to the brush menu
     win.bStyleMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "paint-tools.png")), "Brush Style")
     win.bStyleMenu.setFont(font)
 
-    # Adding a brush speed to main menu
+    # Adding a brush speed submenu to the brush menu
     win.bSpeedMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "brush-speed.png")), "Brush Speed")
     win.bSpeedMenu.setFont(font)
 
-    # Adding a line style to main menu
+    # Adding a line style submenu to the brush menu
     win.lStyleMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "line-style.png")), "Line Style")
     win.lStyleMenu.setFont(font)
 
@@ -71,7 +75,6 @@ def createMenu(win):
     pix_12 = QAction(QIcon(os.path.join("Assets", "12px.png")), "12px", win)
     win.bSizeMenu.addAction(pix_12)
     pix_12.triggered.connect(win.Pixel_12)
-    pix_12.setDisabled(True)
 
     pix_16 = QAction(QIcon(os.path.join("Assets", "16px.png")), "16px", win)
     win.bSizeMenu.addAction(pix_16)
@@ -80,6 +83,7 @@ def createMenu(win):
     pix_20 = QAction(QIcon(os.path.join("Assets", "20px.png")), "20px", win)
     win.bSizeMenu.addAction(pix_20)
     pix_20.triggered.connect(win.Pixel_20)
+    pix_20.setDisabled(True)
 
     pix_24 = QAction(QIcon(os.path.join("Assets", "24px.png")), "24px", win)
     win.bSizeMenu.addAction(pix_24)
@@ -133,17 +137,22 @@ def createMenu(win):
     custom.triggered.connect(win.customColor)
 
 
+    # Creating options for paint types
+    acrylic = QAction(QIcon(os.path.join("Assets", "paint-tube.png")), "Acrylic", win)
+    win.bPaintTypeMenu.addAction(acrylic)
+    acrylic.triggered.connect(win.acrylic)
+    acrylic.setDisabled(True)
+
+    watercolor = QAction(QIcon(os.path.join("Assets", "water-pot.png")), "Watercolor", win)
+    win.bPaintTypeMenu.addAction(watercolor)
+    watercolor.triggered.connect(win.watercolor)
+
+
     # Creating options for brush styles
     marker = QAction(QIcon(os.path.join("Assets", "marker.png")), "Marker", win)
     win.bStyleMenu.addAction(marker)
     marker.triggered.connect(win.marker)
     marker.setDisabled(True)
-
-    watercolor = QAction(QIcon(os.path.join("Assets", "watercolor.png")), "Watercolor", win)
-    win.bStyleMenu.addAction(watercolor)
-    watercolor.triggered.connect(win.watercolor)
-
-    # win.bStyleMenu.addSeparator()
 
     sprayPaint = QAction(QIcon(os.path.join("Assets", "spray-paint.png")), "Spray Paint", win)
     win.bStyleMenu.addAction(sprayPaint)

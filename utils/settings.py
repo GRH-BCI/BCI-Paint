@@ -1,4 +1,5 @@
 from enum import Enum
+from PyQt5.QtWidgets import QProxyStyle, QStyle
 
 class Mode(Enum):
     """
@@ -32,15 +33,23 @@ class BrushStyle(Enum):
     Varients:
     ----------
     MARKER
-    WATERCOLOR
     SPRAYPAINT
     GRAFFITI
     SPLATTER
     ABSTRACT
     """
+
     MARKER = "marker"
-    WATERCOLOR = "watercolor"
     SPRAYPAINT = "spray paint"
     GRAFFITI = "graffiti"
     SPLATTER = "splatter"
     ABSTRACT = "abstract"
+
+# Create a style class to make the menu bar icons larger
+class largeIconProxyStyle(QProxyStyle):
+    def pixelMetric(self, QStylePixelMetric, option=None, widget=None):
+
+        if QStylePixelMetric == QStyle.PM_SmallIconSize:
+            return 30
+        else:
+            return QProxyStyle.pixelMetric(self, QStylePixelMetric, option, widget)

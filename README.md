@@ -42,8 +42,11 @@ Link to License used by geeksforgeeks: https://creativecommons.org/licenses/by-s
 Images from the following sources are used in the program:
 
 * Paint Palette Icon: <a href="https://www.flaticon.com/free-icons/painting" title="painting icons">Painting icons created by Freepik - Flaticon</a>
+* Paint Type Icon:
+<a href="https://www.flaticon.com/free-icons/paint-bucket" title="paint-bucket icons">Paint-bucket icons created by BZZRINCANTATION - Flaticon</a>
+* Acrylic: <a href="https://www.flaticon.com/free-icons/paint" title="paint icons">Paint icons created by Smashicons - Flaticon</a>
 * Marker Icon: <a href="https://www.flaticon.com/free-icons/highlighter" title="highlighter icons">Highlighter icons created by Freepik - Flaticon</a>
-* Watercolour Icon: <a href="https://www.flaticon.com/free-icons/paint-brush" title="paint brush icons">Paint brush icons created by Freepik - Flaticon</a>
+* Watercolour Icon: adapted from <a href="https://www.flaticon.com/free-icons/watercolor" title="Watercolor icons">Watercolor icons created by Freepik - Flaticon</a>
 * Spray Paint Icon: <a href="https://www.flaticon.com/free-icons/art-and-design" title="art and design icons">Art and design icons created by Freepik - Flaticon</a>
 * Splatter Icon: <a href="https://www.flaticon.com/free-icons/splatter" title="splatter icons">Splatter icons created by Smashicons - Flaticon</a>
 * Graffiti Icon: <a href="https://www.flaticon.com/free-icons/splatter" title="splatter icons">Splatter icons created by Freepik - Flaticon</a>
