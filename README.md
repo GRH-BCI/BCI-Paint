@@ -1,33 +1,103 @@
-# BCI-Paint
-This is a repo for the BCI enabled painting project.
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/GRH-BCI/BCI-Paint">
+    <img src="Assets/paint-palette.png" alt="Logo" width="80" height="80">
+  </a>
 
-# Contribution
-Contribution will be done primarily through checking out branches for work, followed by pull requests to migrate approved work to the Main branch. 
+<h3 align="center">BCI Paint</h3>
 
-# Branch Naming Convention
-Please indicate which part of the system you are working on as the first word in your branch name. For instance, when working on the python response back end, indicate so by using "python/<mybranch_name>".
+  <p align="center">
+    This is a repo for the BCI enabled painting program.
+  </p>
+</div>
 
-# Requirements 
-Please make sure you create a requirements or environment file that includes all the required libraries and modules. 
+<!-- TABLE OF CONTENTS -->
+<summary>Table of Contents</summary>
+<ol>
+  <li>
+    <a href="#about-the-project">About The Project</a>
+    <ul>
+      <li><a href="#how-it-works">How it Works</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#getting-started">Getting Started</a>
+    <ul>
+      <li><a href="#prerequisites">Prerequisites</a></li>
+      <li><a href="#building-the-project">Building the Project</a></li>
+    </ul>
+  </li>
+  <li><a href="#contributing">Contributing</a></li>
+  <li><a href="#license">License</a></li>
+  <li><a href="#acknowledgments">Acknowledgments</a></li>
+</ol>
 
-# Development Plan
+# About the Project
+This project was developed for the Imagination Centre BCI Program at the Glenrose Rehabilitation Hospital. The purpose of this app is to enable people with severely limited physical mobility access to paint.
 
-## Specifications
-**Language:** Python
-**Libraries:** Pygame
+![painting](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/7524f1db-498c-4d60-bcca-61185e2d5450)
 
-## Steps
-1.	Research and select a language to develop the application with.
-2.	Research and select the main libraries within the language that will be needed.
-3.	Research other paint applications written in the selected language.
-4.	Determine what features would be nice to have in a paint application.
-5.	Determine how and if the user can be given choice for each feature. Determine the limitations of BCI and if necessary, simplify or reduce the features.
-6.	Create a mock-up of the user interface.
-7.	Develop a prototype paint program that works with keyboard input.
-8.	Integrate the program with the BCI software.
-9.	Test the program and refine the features as necessary.
+## How it works
+This app uses the GRH-Home-BCI app at https://github.com/GRH-BCI for input in the form of a key press, which moves the brush.
 
-# Attributions:
+Using the clock animation and timing, the user can control the direction the brush moves. The brush can also be controlled with the four arrow keys.
+
+![Main Page](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/4185a567-0572-43d1-a7dc-03017e1d8812)
+
+![File Menu](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/c73a52f2-5f3e-4185-8c22-35828d1b369a)
+
+The File menu is where the painting can be saved as PNG or JPEG file and the canvas can be cleared.
+
+![Brush Menu](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/ab02f383-f24e-4519-a033-954adea13416)
+
+The Brush menu allows you to adjust the properties of the brush
+  * **Brush Size:** size of the brush
+  * **Brush Colour:** colour of the brush
+  * **Paint Type:** the type of paint to use
+  * **Brush Style:** style of the paint stroke
+  * **Brush speed:** how far the brush moves in one stroke
+  * **Line style:** solid or dotted paint stroke
+
+![Mode Menu](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/fa08a5ce-5d79-4c8d-9b38-30dfdc6fc441)
+
+The Mode menu allows you to switch between freestyle and game mode
+  * **Freestyle:** fine control over the movement of the brush
+  * **Game:** the brush bounces of the edges of the canvas
+
+![Clock Speed Menu](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/2df3dfe2-e4fc-4e4e-bbb2-b9a1a8faaa2f)
+
+The clock speed (how fast the indicator for the direction of the brush changes) can be adjusted using the Clock Speed menu
+  * The stop button can stop the clock if the user wants to draw a line in a particular direction.
+  * With hyperspeed you can draw a circle if the command can be held for long enough
+
+![BCI Key Menu](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/1b7b0a14-8ab1-497a-8b41-6024fbfd41f3)
+
+The BCI Key menu allows the user to match the key that activates the brush to the selected key in the GRH-Home-BCI app that gets pressed when the command is activated.
+
+# Getting Started
+## Prerequisites
+* PyQt5: https://pypi.org/project/PyQt5/
+* PyInstaller: https://pypi.org/project/pyinstaller/
+  * PyInstaller is used to create an executable for the app
+
+## Building the Project
+1. Download the source code
+2. Unzip the folder
+3. Navigate to the folder in your preferred IDE or in the terminal and run `pyinstaller main.py`
+4. A 'dist' folder should be created and the exectuable should be inside the 'main' folder in the 'dist' folder
+5. Move or copy the Assets folder into the dist folder
+6. Double click on main.exe to run the app!
+
+# Contributing
+Contributions are welcome and will help progress the development of BCI acessible applications!
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request.
+
+# License
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+# Acknowledgments
 
 This program modifies and extends the example code from the following source:
 <br>
