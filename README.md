@@ -36,20 +36,22 @@
 # About the Project
 This project was developed for the Imagination Centre BCI Program at the Glenrose Rehabilitation Hospital. The purpose of this app is to enable people with severely limited physical mobility access to paint.
 
-![painting](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/7524f1db-498c-4d60-bcca-61185e2d5450)
+<div align="center">
+  <img src="docs/images/painting.png" width="500">
+</div>
 
 ## How it works
 This app uses the GRH-Home-BCI app at https://github.com/GRH-BCI for input in the form of a key press, which moves the brush.
 
 Using the clock animation and timing, the user can control the direction the brush moves. The brush can also be controlled with the four arrow keys.
 
-![Main Page](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/4185a567-0572-43d1-a7dc-03017e1d8812)
+<img src="docs/images/MainScreen.png" width="700">
 
-![File Menu](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/c73a52f2-5f3e-4185-8c22-35828d1b369a)
+<img src="docs/images/FileMenu.png" width="350">
 
 The File menu is where the painting can be saved as PNG or JPEG file and the canvas can be cleared.
 
-![Brush Menu](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/ab02f383-f24e-4519-a033-954adea13416)
+<img src="docs/images/BrushMenu.png" width="350">
 
 The Brush menu allows you to adjust the properties of the brush
   * **Brush Size:** size of the brush
@@ -59,19 +61,19 @@ The Brush menu allows you to adjust the properties of the brush
   * **Brush speed:** how far the brush moves in one stroke
   * **Line style:** solid or dotted paint stroke
 
-![Mode Menu](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/fa08a5ce-5d79-4c8d-9b38-30dfdc6fc441)
+<img src="docs/images/ModeMenu.png" width="350">
 
 The Mode menu allows you to switch between freestyle and game mode
   * **Freestyle:** fine control over the movement of the brush
   * **Game:** the brush bounces of the edges of the canvas
 
-![Clock Speed Menu](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/2df3dfe2-e4fc-4e4e-bbb2-b9a1a8faaa2f)
+<img src="docs/images/ClockSpeedMenu.png" width="350">
 
 The clock speed (how fast the indicator for the direction of the brush changes) can be adjusted using the Clock Speed menu
   * The stop button can stop the clock if the user wants to draw a line in a particular direction.
   * With hyperspeed you can draw a circle if the command can be held for long enough
 
-![BCI Key Menu](https://github.com/GRH-BCI/BCI-Paint/assets/114539416/1b7b0a14-8ab1-497a-8b41-6024fbfd41f3)
+<img src="docs/images/BCIKeyMenu.png" width="350">
 
 The BCI Key menu allows the user to match the key that activates the brush to the selected key in the GRH-Home-BCI app that gets pressed when the command is activated.
 
@@ -84,10 +86,9 @@ The BCI Key menu allows the user to match the key that activates the brush to th
 ## Building the Project
 1. Download the source code
 2. Unzip the folder
-3. Navigate to the folder in your preferred IDE or in the terminal and run `pyinstaller main.py`
-4. A 'dist' folder should be created and the exectuable should be inside the 'main' folder in the 'dist' folder
-5. Move or copy the Assets folder into the dist folder
-6. Double click on main.exe to run the app!
+3. Navigate to the folder in your preferred IDE or in the terminal and run `pyinstaller --add-data="Assets;Assets" main.py`
+4. A 'dist' folder should be created and the exectuable "main.exe" should be inside the 'main' folder in the 'dist' folder
+5. Double click on main.exe to run the app!
 
 # Contributing
 Contributions are welcome and will help progress the development of BCI acessible applications!
