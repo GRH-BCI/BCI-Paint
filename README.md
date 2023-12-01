@@ -86,7 +86,7 @@ The BCI Key menu allows the user to match the key that activates the brush to th
 ## Building the Project
 1. Download the source code
 2. Unzip the folder
-3. Navigate to the folder in your preferred IDE or in the terminal and run `pyinstaller --add-data="Assets;Assets" main.py`
+3. Navigate to the folder in your preferred IDE or in the terminal and run `pyinstaller --add-data="Assets;Assets" --icon="Assets/favicon.ico" --noconsole main.py`
 4. A 'dist' folder should be created and the exectuable "main.exe" should be inside the 'main' folder in the 'dist' folder
 5. Double click on main.exe to run the app!
 
