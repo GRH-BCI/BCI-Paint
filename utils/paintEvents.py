@@ -2,7 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import random
 import math
-from .settings import LineStyle, BrushStyle
+from .settings import LineStyle, BrushStyle, Texture
 
 def drawStroke(win):
     """
@@ -17,7 +17,10 @@ def drawStroke(win):
     # If the spray paint option is chosen it overrides the line style
     if win.brushStyle == BrushStyle.SPRAYPAINT:
         # Set the pen of the painter
-        win.painter.setPen(QPen(win.brushColor, 1, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+        pen = QPen(win.brushColor, 1, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
+        win.painter.setPen(pen)
+
+        setTexture(win, pen)
 
         # Draw the spray
         for n in range(100):
@@ -27,13 +30,19 @@ def drawStroke(win):
 
     elif win.brushStyle == BrushStyle.GRAFFITI:
         # Set the pen of the painter
-        win.painter.setPen(QPen(win.brushColor, win.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+        pen = QPen(win.brushColor, win.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
+        win.painter.setPen(pen)
         
+        setTexture(win, pen)
+
         # Draw line from the last point of cursor to the current point
         win.painter.drawLine(win.lastPoint, QPointF(win.x, win.y))
 
         # Draw the spray
-        win.painter.setPen(QPen(win.brushColor, 1, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+        pen = QPen(win.brushColor, 1, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
+        win.painter.setPen(pen)
+
+        setTexture(win, pen)
 
         for n in range(500):
             xo = random.gauss(0, win.brush.width())
@@ -41,7 +50,10 @@ def drawStroke(win):
             win.painter.drawPoint(int(win.x + xo), int(win.y + yo))
 
         # Draw the drip
-        win.painter.setPen(QPen(win.brushColor, win.brushSize//4, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+        pen = QPen(win.brushColor, win.brushSize//4, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
+        win.painter.setPen(pen)
+
+        setTexture(win, pen)
 
         drip = random.random()
         if drip > 0.40 and math.sqrt(yo**2 + xo**2) < win.brush.size().width():
@@ -49,7 +61,10 @@ def drawStroke(win):
     
     elif win.brushStyle == BrushStyle.SPLATTER:
         # Set the pen of the painter
-        win.painter.setPen(QPen(win.brushColor, win.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+        pen = QPen(win.brushColor, win.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
+        win.painter.setPen(pen)
+
+        setTexture(win, pen)
         
         # Draw line from the last point of cursor to the current point
         win.painter.drawLine(win.lastPoint, QPointF(win.x, win.y))
@@ -66,22 +81,55 @@ def drawStroke(win):
             yo = random.gauss(0, win.brush.width()*2)
 
             splatterSize = 1/math.sqrt(xo**2 + yo**2)*5
-            win.painter.setPen(QPen(win.brushColor, splatterSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+            
+            pen = QPen(win.brushColor, splatterSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
+            win.painter.setPen(pen)
+
+            setTexture(win, pen)
+
             win.painter.drawPoint(int(win.x + xo), int(win.y + yo))
 
     elif win.lineStyle == LineStyle.DOTTED:
         # Set the pen of the painter
-        win.painter.setPen(QPen(win.brushColor, win.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+        pen = QPen(win.brushColor, win.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
+        win.painter.setPen(pen)
+
+        setTexture(win, pen)
         
         # Draw a point around the current brush position
         win.painter.drawPoint(QPointF(win.x, win.y))
 
     else:
         # Set the pen of the painter
-        win.painter.setPen(QPen(win.brushColor, win.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+        pen = QPen(win.brushColor, win.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
+        win.painter.setPen(pen)
+
+        setTexture(win, pen)
         
         # Draw line from the last point of cursor to the current point
         win.painter.drawLine(win.lastPoint, QPointF(win.x, win.y))
+
+
+def setTexture(win, pen):
+    """
+    Handles setting the texture of the brush
+
+    Parameters:
+    ----------
+    win: Window
+        The main window
+    pen: QPen
+        The pen to set the brush texture on
+    """
+
+    if (win.texture == Texture.GOLD):
+        patternBrush = QBrush(QPixmap('Assets/gold.jpg'))
+    elif (win.texture == Texture.SILVER):
+        patternBrush = QBrush(QPixmap('Assets/silver.jpg'))
+
+    if (win.texture != Texture.NULL):
+        pen.setBrush(patternBrush)
+        win.painter.setPen(pen)
 
 
 def handleBrushMovement(win, event, deltaX, deltaY):

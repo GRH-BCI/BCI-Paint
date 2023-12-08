@@ -54,6 +54,9 @@ class Window(QMainWindow):
         self.rainbowTimer.timeout.connect(self.updateColor)
         self.rainbowTimer.start()
 
+        # Initialize the texture of the brush
+        self.texture = Texture.NULL
+
         # Set the timer for the blink of the brush
         self.blink = True
 
@@ -274,51 +277,71 @@ class Window(QMainWindow):
     # Handle the brush colour actions
     def blackColor(self):
         self.brushColor = QColor(0, 0, 0, self.alpha)
+        self.texture = Texture.NULL
         self.rainbow = False
         self.disableSelection(self.bColorMenu, "Black")
  
     def whiteColor(self):
         self.brushColor = QColor(255, 255, 255, self.alpha)
+        self.texture = Texture.NULL
         self.rainbow = False
         self.disableSelection(self.bColorMenu, "White")
 
     def redColor(self):
         self.brushColor = QColor(255, 0, 0, self.alpha)
+        self.texture = Texture.NULL
         self.rainbow = False
         self.disableSelection(self.bColorMenu, "Red")
 
     def orangeColor(self):
         self.brushColor = QColor(255, 127, 0, self.alpha)
+        self.texture = Texture.NULL
         self.rainbow = False
         self.disableSelection(self.bColorMenu, "Orange")
 
     def yellowColor(self):
         self.brushColor = QColor(255, 255, 0, self.alpha)
+        self.texture = Texture.NULL
         self.rainbow = False
         self.disableSelection(self.bColorMenu, "Yellow")
  
     def greenColor(self):
         self.brushColor = QColor(0, 255, 0, self.alpha)
+        self.texture = Texture.NULL
         self.rainbow = False
         self.disableSelection(self.bColorMenu, "Green")
 
     def blueColor(self):
         self.brushColor = QColor(0, 0, 255, self.alpha)
+        self.texture = Texture.NULL
         self.rainbow = False
         self.disableSelection(self.bColorMenu, "Blue")
 
     def purpleColor(self):
         self.brushColor = QColor(127, 0, 255, self.alpha)
+        self.texture = Texture.NULL
         self.rainbow = False
         self.disableSelection(self.bColorMenu, "Purple")
 
     def pinkColor(self):
         self.brushColor = QColor(255, 0, 127, self.alpha)
+        self.texture = Texture.NULL
         self.rainbow = False
         self.disableSelection(self.bColorMenu, "Pink")
 
+    def goldColor(self):
+        self.texture = Texture.GOLD
+        self.rainbow = False
+        self.disableSelection(self.bColorMenu, "Gold")
+
+    def silverColor(self):
+        self.texture = Texture.SILVER
+        self.rainbow = False
+        self.disableSelection(self.bColorMenu, "Silver")
+
     def rainbowColor(self):
         self.brushColor = QColor(255, 0, 0, self.alpha)
+        self.texture = Texture.NULL
         self.rainbow = True
         self.disableSelection(self.bColorMenu, "Rainbow")
 
@@ -332,6 +355,7 @@ class Window(QMainWindow):
 
         if color.isValid():
             self.brushColor = QColor(color.red(), color.green(), color.blue(), self.alpha)
+            self.texture = Texture.NULL
             self.rainbow = False
 
             # Set the icon of the custom color to the selected color

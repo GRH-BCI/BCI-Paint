@@ -128,6 +128,14 @@ def createMenu(win):
     win.bColorMenu.addAction(pink)
     pink.triggered.connect(win.pinkColor)
 
+    gold = QAction(QIcon(os.path.join("Assets", "Gold.jpg")), "Gold", win)
+    win.bColorMenu.addAction(gold)
+    gold.triggered.connect(win.goldColor)
+
+    silver = QAction(QIcon(os.path.join("Assets", "Silver.jpg")), "Silver", win)
+    win.bColorMenu.addAction(silver)
+    silver.triggered.connect(win.silverColor)
+
     rainbow = QAction(QIcon(os.path.join("Assets", "Rainbow.png")), "Rainbow", win)
     win.bColorMenu.addAction(rainbow)
     rainbow.triggered.connect(win.rainbowColor)

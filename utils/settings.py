@@ -45,6 +45,21 @@ class BrushStyle(Enum):
     SPLATTER = "splatter"
     ABSTRACT = "abstract"
 
+class Texture(Enum):
+    """
+    A class used to represent different textures
+
+    Varients:
+    ----------
+    GOLD
+    SILVER
+    NULL
+    """
+
+    GOLD = "gold"
+    SILVER = "silver"
+    NULL = "none"
+
 # Create a style class to make the menu bar icons larger
 class largeIconProxyStyle(QProxyStyle):
     def pixelMetric(self, QStylePixelMetric, option=None, widget=None):
