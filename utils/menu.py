@@ -6,9 +6,8 @@ import os
 def createMenu(win):
     # Creating the menu bar
     mainMenu = win.menuBar()
-    mainMenu.setMinimumHeight(30)
     font = mainMenu.font()
-    font.setPointSize(10)
+    font.setPointSize(14)
     mainMenu.setFont(font)
 
     # Adding a file menu for the save and clear actions
@@ -26,6 +25,10 @@ def createMenu(win):
     # Adding brush color submenu to the brush menu
     win.bColorMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "colour.png")), "Brush Color")
     win.bColorMenu.setFont(font)
+
+    # Adding brush texture submenu to the brush menu
+    win.bTextureMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "material.png")),  "Texture")
+    win.bTextureMenu.setFont(font)
 
     # Adding paint type submenu to the brush menu
     win.bPaintTypeMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "paint-bucket.png")), "Paint Type")
@@ -144,6 +147,15 @@ def createMenu(win):
     win.bColorMenu.addAction(custom)
     custom.triggered.connect(win.customColor)
 
+    # Creating options for texture types
+    none = QAction(QIcon(os.path.join("Assets", "no-entry.png")), "None", win)
+    win.bTextureMenu.addAction(none)
+    none.triggered.connect(win.noTexture)
+    none.setDisabled(True)
+
+    metallic = QAction(QIcon(os.path.join("Assets", "shines.png")), "Metallic", win)
+    win.bTextureMenu.addAction(metallic)
+    metallic.triggered.connect(win.metallicTexture)
 
     # Creating options for paint types
     acrylic = QAction(QIcon(os.path.join("Assets", "paint-tube.png")), "Acrylic", win)

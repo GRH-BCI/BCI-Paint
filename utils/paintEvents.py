@@ -2,7 +2,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import random
 import math
-from .settings import LineStyle, BrushStyle, Texture
+from .settings import LineStyle, BrushStyle, Texture, SpecialtyColor
+import os
 
 def drawStroke(win):
     """
@@ -122,12 +123,35 @@ def setTexture(win, pen):
         The pen to set the brush texture on
     """
 
-    if (win.texture == Texture.GOLD):
-        patternBrush = QBrush(QPixmap('Assets/gold.jpg'))
-    elif (win.texture == Texture.SILVER):
-        patternBrush = QBrush(QPixmap('Assets/silver.jpg'))
+    if (win.specialtyColor == SpecialtyColor.GOLD):
+        patternBrush = QBrush(QPixmap(os.path.join("Assets", "gold.jpg")))
+    elif (win.specialtyColor == SpecialtyColor.SILVER):
+        patternBrush = QBrush(QPixmap(os.path.join("Assets", "silver.jpg")))
+    elif (win.texture == Texture.METALLIC):
+        if (not os.path.isfile(os.path.join("Assets", "custom-metallic")) or win.newColor):
+            pixmap = QPixmap(os.path.join("Assets", "silver.jpg"))
+            tmp = pixmap.toImage()
+            
+            # Change each pixel in the image create a mask of the color over the texture
+            for y in range(0, tmp.height()):
+                for x in range (0, tmp.width()):
+                    r = (win.brushColor.red() + tmp.pixelColor(x,y).red()) // 2
+                    g = (win.brushColor.green() + tmp.pixelColor(x,y).green()) // 2
+                    b = (win.brushColor.blue() + tmp.pixelColor(x,y).blue()) // 2
+                    a = win.brushColor.alpha()
+                    color = QColor(r, g, b, a)
+            
+                    tmp.setPixelColor(x,y,color)
+            
+            pixmap = QPixmap.fromImage(tmp)
+            pixmap.save(os.path.join("Assets", "custom-metallic"), "PNG")
+            win.newColor = False
+        else:
+            pixmap = QPixmap(os.path.join("Assets", "custom-metallic"))
 
-    if (win.texture != Texture.NULL):
+        patternBrush = QBrush(pixmap)
+
+    if (win.texture != Texture.NULL or win.specialtyColor == SpecialtyColor.GOLD or win.specialtyColor == SpecialtyColor.SILVER):
         pen.setBrush(patternBrush)
         win.painter.setPen(pen)
 

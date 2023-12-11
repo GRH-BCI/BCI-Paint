@@ -47,8 +47,11 @@ class Window(QMainWindow):
         self.angleTimer.timeout.connect(self.updateAngle)
         self.angleTimer.start()
 
-        # Initialize the rainbow colour to off and start the rainbow timer
-        self.rainbow = False
+        # Initialize the type of color
+        self.specialtyColor = SpecialtyColor.REGULAR
+
+        # Indicates whether a texture image has been created with the color or if it is new
+        self.newColor = True
 
         self.rainbowTimer = QTimer(self, interval=10)
         self.rainbowTimer.timeout.connect(self.updateColor)
@@ -277,86 +280,87 @@ class Window(QMainWindow):
     # Handle the brush colour actions
     def blackColor(self):
         self.brushColor = QColor(0, 0, 0, self.alpha)
-        self.texture = Texture.NULL
-        self.rainbow = False
+        self.specialtyColor = SpecialtyColor.REGULAR
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "Black")
  
     def whiteColor(self):
         self.brushColor = QColor(255, 255, 255, self.alpha)
-        self.texture = Texture.NULL
-        self.rainbow = False
+        self.specialtyColor = SpecialtyColor.REGULAR
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "White")
 
     def redColor(self):
         self.brushColor = QColor(255, 0, 0, self.alpha)
-        self.texture = Texture.NULL
-        self.rainbow = False
+        self.specialtyColor = SpecialtyColor.REGULAR
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "Red")
 
     def orangeColor(self):
         self.brushColor = QColor(255, 127, 0, self.alpha)
-        self.texture = Texture.NULL
-        self.rainbow = False
+        self.specialtyColor = SpecialtyColor.REGULAR
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "Orange")
 
     def yellowColor(self):
         self.brushColor = QColor(255, 255, 0, self.alpha)
-        self.texture = Texture.NULL
-        self.rainbow = False
+        self.specialtyColor = SpecialtyColor.REGULAR
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "Yellow")
  
     def greenColor(self):
         self.brushColor = QColor(0, 255, 0, self.alpha)
-        self.texture = Texture.NULL
-        self.rainbow = False
+        self.specialtyColor = SpecialtyColor.REGULAR
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "Green")
 
     def blueColor(self):
         self.brushColor = QColor(0, 0, 255, self.alpha)
-        self.texture = Texture.NULL
-        self.rainbow = False
+        self.specialtyColor = SpecialtyColor.REGULAR
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "Blue")
 
     def purpleColor(self):
         self.brushColor = QColor(127, 0, 255, self.alpha)
-        self.texture = Texture.NULL
-        self.rainbow = False
+        self.specialtyColor = SpecialtyColor.REGULAR
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "Purple")
 
     def pinkColor(self):
         self.brushColor = QColor(255, 0, 127, self.alpha)
-        self.texture = Texture.NULL
-        self.rainbow = False
+        self.specialtyColor = SpecialtyColor.REGULAR
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "Pink")
 
     def goldColor(self):
-        self.texture = Texture.GOLD
-        self.rainbow = False
+        self.specialtyColor = SpecialtyColor.GOLD
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "Gold")
 
     def silverColor(self):
-        self.texture = Texture.SILVER
-        self.rainbow = False
+        self.specialtyColor = SpecialtyColor.SILVER
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "Silver")
 
     def rainbowColor(self):
         self.brushColor = QColor(255, 0, 0, self.alpha)
-        self.texture = Texture.NULL
-        self.rainbow = True
+        self.specialtyColor = SpecialtyColor.RAINBOW
+        self.newColor = True
         self.disableSelection(self.bColorMenu, "Rainbow")
 
     def updateColor(self):
-        if self.rainbow:
+        if self.specialtyColor == SpecialtyColor.RAINBOW:
             self.brushColor.setHsl((self.brushColor.hue() + 1) % 360, self.brushColor.saturation(), self.brushColor.lightness())
             self.brushColor.setAlpha(self.alpha)
+            self.newColor = True
 
     def customColor(self):
         color = QColorDialog.getColor(initial=self.brushColor)
 
         if color.isValid():
             self.brushColor = QColor(color.red(), color.green(), color.blue(), self.alpha)
-            self.texture = Texture.NULL
-            self.rainbow = False
+            self.specialtyColor = SpecialtyColor.REGULAR
+            self.newColor = True
 
             # Set the icon of the custom color to the selected color
             colorIcon = QPixmap(50, 50)
@@ -367,6 +371,17 @@ class Window(QMainWindow):
                     action.setIcon(QIcon(colorIcon))
 
             self.disableSelection(self.bColorMenu, "")
+
+    
+    # Handle the texture type actions
+    def noTexture(self):
+        self.texture = Texture.NULL
+        self.disableSelection(self.bTextureMenu, "None")
+
+    def metallicTexture(self):
+        self.texture = Texture.METALLIC
+        self.disableSelection(self.bTextureMenu, "Metallic")
+
 
     # Handle the paint type actions
     def acrylic(self):
