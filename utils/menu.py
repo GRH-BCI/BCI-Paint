@@ -6,17 +6,16 @@ import os
 def createMenu(win):
     # Creating the menu bar
     mainMenu = win.menuBar()
-    mainMenu.setMinimumHeight(30)
     font = mainMenu.font()
-    font.setPointSize(10)
+    font.setPointSize(14)
     mainMenu.setFont(font)
 
     # Adding a file menu for the save and clear actions
-    win.fileMenu = mainMenu.addMenu("File")
+    win.fileMenu = mainMenu.addMenu("\U0001F4C1 File")
     win.fileMenu.setFont(font)
 
     # Adding a brush menu to the main menu bar
-    win.brushMenu = mainMenu.addMenu("Brush")
+    win.brushMenu = mainMenu.addMenu("\U0001F58C Brush")
     win.brushMenu.setFont(font)
 
     # Adding brush size submenu to the brush menu
@@ -26,6 +25,10 @@ def createMenu(win):
     # Adding brush color submenu to the brush menu
     win.bColorMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "colour.png")), "Brush Color")
     win.bColorMenu.setFont(font)
+
+    # Adding brush texture submenu to the brush menu
+    win.bTextureMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "material.png")),  "Texture")
+    win.bTextureMenu.setFont(font)
 
     # Adding paint type submenu to the brush menu
     win.bPaintTypeMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "paint-bucket.png")), "Paint Type")
@@ -44,15 +47,15 @@ def createMenu(win):
     win.lStyleMenu.setFont(font)
 
     # Adding a mode selection to main menu
-    win.modeMenu = mainMenu.addMenu("Mode")
+    win.modeMenu = mainMenu.addMenu("\U0001F3AE Mode")
     win.modeMenu.setFont(font)
 
     # Adding a clock speed selection to main menu
-    win.clockSpeedMenu = mainMenu.addMenu("Clock Speed")
+    win.clockSpeedMenu = mainMenu.addMenu("\U0001F55B Clock Speed")
     win.clockSpeedMenu.setFont(font)
 
     # Adding BCI key selection to main menu
-    win.BCIKeyMenu = mainMenu.addMenu("BCI Key")
+    win.BCIKeyMenu = mainMenu.addMenu("\U00002328 BCI Key")
     win.BCIKeyMenu.setFont(font)
 
     # Adding feedback option to main menu
@@ -128,6 +131,14 @@ def createMenu(win):
     win.bColorMenu.addAction(pink)
     pink.triggered.connect(win.pinkColor)
 
+    gold = QAction(QIcon(os.path.join("Assets", "Gold.jpg")), "Gold", win)
+    win.bColorMenu.addAction(gold)
+    gold.triggered.connect(win.goldColor)
+
+    silver = QAction(QIcon(os.path.join("Assets", "Silver.jpg")), "Silver", win)
+    win.bColorMenu.addAction(silver)
+    silver.triggered.connect(win.silverColor)
+
     rainbow = QAction(QIcon(os.path.join("Assets", "Rainbow.png")), "Rainbow", win)
     win.bColorMenu.addAction(rainbow)
     rainbow.triggered.connect(win.rainbowColor)
@@ -136,6 +147,15 @@ def createMenu(win):
     win.bColorMenu.addAction(custom)
     custom.triggered.connect(win.customColor)
 
+    # Creating options for texture types
+    none = QAction(QIcon(os.path.join("Assets", "no-entry.png")), "None", win)
+    win.bTextureMenu.addAction(none)
+    none.triggered.connect(win.noTexture)
+    none.setDisabled(True)
+
+    metallic = QAction(QIcon(os.path.join("Assets", "shines.png")), "Metallic", win)
+    win.bTextureMenu.addAction(metallic)
+    metallic.triggered.connect(win.metallicTexture)
 
     # Creating options for paint types
     acrylic = QAction(QIcon(os.path.join("Assets", "paint-tube.png")), "Acrylic", win)

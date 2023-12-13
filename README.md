@@ -134,3 +134,8 @@ Images from the following sources are used in the program:
 * Brush Syles Icon: <a href="https://www.flaticon.com/free-icons/draw" title="draw icons">Draw icons created by photo3idea_studio - Flaticon</a>
 * Save Icon: <a href="https://www.flaticon.com/free-icons/save" title="save icons">Save icons created by Freepik - Flaticon</a>
 * Delete Icon: <a href="https://www.flaticon.com/free-icons/delete" title="delete icons">Delete icons created by Freepik - Flaticon</a>
+* Texture Icon: <a href="https://www.flaticon.com/free-icons/texture" title="texture icons">Texture icons created by small.smiles - Flaticon</a>
+* None Icon: <a href="https://www.flaticon.com/free-icons/traffic" title="traffic icons">Traffic icons created by Freepik - Flaticon</a>
+* Metallic: <a href="https://www.flaticon.com/free-icons/shine" title="shine icons">Shine icons created by Freepik - Flaticon</a>
+* Gold Color: https://pixabay.com/
+* Silver Color: https://www.pickpik.com/background-silver-glitter-glittering-background-texture-textured-4989
