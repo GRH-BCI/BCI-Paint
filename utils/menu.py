@@ -11,11 +11,11 @@ def createMenu(win):
     mainMenu.setFont(font)
 
     # Adding a file menu for the save and clear actions
-    win.fileMenu = mainMenu.addMenu("File")
+    win.fileMenu = mainMenu.addMenu("\U0001F4C1 File")
     win.fileMenu.setFont(font)
 
     # Adding a brush menu to the main menu bar
-    win.brushMenu = mainMenu.addMenu("Brush")
+    win.brushMenu = mainMenu.addMenu("\U0001F58C Brush")
     win.brushMenu.setFont(font)
 
     # Adding brush size submenu to the brush menu
@@ -47,15 +47,15 @@ def createMenu(win):
     win.lStyleMenu.setFont(font)
 
     # Adding a mode selection to main menu
-    win.modeMenu = mainMenu.addMenu("Mode")
+    win.modeMenu = mainMenu.addMenu("\U0001F3AE Mode")
     win.modeMenu.setFont(font)
 
     # Adding a clock speed selection to main menu
-    win.clockSpeedMenu = mainMenu.addMenu("Clock Speed")
+    win.clockSpeedMenu = mainMenu.addMenu("\U0001F55B Clock Speed")
     win.clockSpeedMenu.setFont(font)
 
     # Adding BCI key selection to main menu
-    win.BCIKeyMenu = mainMenu.addMenu("BCI Key")
+    win.BCIKeyMenu = mainMenu.addMenu("\U00002328 BCI Key")
     win.BCIKeyMenu.setFont(font)
 
     # Adding feedback option to main menu
