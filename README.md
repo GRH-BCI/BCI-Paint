@@ -56,6 +56,7 @@ The File menu is where the painting can be saved as PNG or JPEG file and the can
 The Brush menu allows you to adjust the properties of the brush
   * **Brush Size:** size of the brush
   * **Brush Colour:** colour of the brush
+  * **Texture:** the texture of the paint
   * **Paint Type:** the type of paint to use
   * **Brush Style:** style of the paint stroke
   * **Brush speed:** how far the brush moves in one stroke
@@ -63,9 +64,10 @@ The Brush menu allows you to adjust the properties of the brush
 
 <img src="docs/images/ModeMenu.png" width="350">
 
-The Mode menu allows you to switch between freestyle and game mode
+The Mode menu allows you to switch between freestyle, game mode, and sticker mode
   * **Freestyle:** fine control over the movement of the brush
   * **Game:** the brush bounces of the edges of the canvas
+  * **Sticker:** allows you to place a sticker/image on the canvas
 
 <img src="docs/images/ClockSpeedMenu.png" width="350">
 
@@ -86,7 +88,7 @@ The BCI Key menu allows the user to match the key that activates the brush to th
 ## Building the Project
 1. Download the source code
 2. Unzip the folder
-3. Navigate to the folder in your preferred IDE or in the terminal and run `pyinstaller --add-data="Assets;Assets" --icon="Assets/favicon.ico" --noconsole main.py`
+3. Navigate to the folder in your preferred IDE or in the terminal and run: <br> `pyinstaller --add-data="Assets;Assets" --icon="Assets/favicon.ico" --noconsole main.py`
 4. A 'dist' folder should be created and the exectuable "main.exe" should be inside the 'main' folder in the 'dist' folder
 5. Double click on main.exe to run the app!
 
@@ -128,6 +130,7 @@ Images from the following sources are used in the program:
 * Hyperspeed Icon: <a href="https://www.flaticon.com/free-icons/thunder" title="thunder icons">Thunder icons created by Freepik - Flaticon</a>
 * Game Icon: <a href="https://www.flaticon.com/free-icons/bounce-rate" title="bounce rate icons">Bounce rate icons created by Royyan Wijaya - Flaticon</a>
 * Freestyle Icon: <a href="https://www.flaticon.com/free-icons/easel" title="easel icons">Easel icons created by Freepik - Flaticon</a>
+* Sticker Icon: <a href="https://www.flaticon.com/free-icons/sticker" title="sticker icons">Sticker icons created by smalllikeart - Flaticon</a>
 * Colour Icon: <a href="https://www.flaticon.com/free-icons/circle" title="circle icons">Circle icons created by Freepik - Flaticon</a>
 * Brush Size Icon: <a href="https://www.flaticon.com/free-icons/graphic-design" title="graphic-design icons">Graphic-design icons created by Freepik - Flaticon</a>
 * Line Style Icon: <a href="https://www.flaticon.com/free-icons/scribble" title="scribble icons">Scribble icons created by Rahul Kaklotar - Flaticon</a>
@@ -137,5 +140,14 @@ Images from the following sources are used in the program:
 * Texture Icon: <a href="https://www.flaticon.com/free-icons/texture" title="texture icons">Texture icons created by small.smiles - Flaticon</a>
 * None Icon: <a href="https://www.flaticon.com/free-icons/traffic" title="traffic icons">Traffic icons created by Freepik - Flaticon</a>
 * Metallic: <a href="https://www.flaticon.com/free-icons/shine" title="shine icons">Shine icons created by Freepik - Flaticon</a>
+* One: <a href="https://www.flaticon.com/free-icons/number-one" title="number one icons">Number one icons created by Hight Quality Icons - Flaticon</a>
+* Two: <a href="https://www.flaticon.com/free-icons/two" title="two icons">Two icons created by Hight Quality Icons - Flaticon</a>
+* Three: <a href="https://www.flaticon.com/free-icons/three" title="three icons">Three icons created by Hight Quality Icons - Flaticon</a>
+* Four: <a href="https://www.flaticon.com/free-icons/4" title="4 icons">4 icons created by Hight Quality Icons - Flaticon</a>
+* Five: <a href="https://www.flaticon.com/free-icons/number-5" title="number 5 icons">Number 5 icons created by Hight Quality Icons - Flaticon</a>
+* Six: <a href="https://www.flaticon.com/free-icons/number" title="number icons">Number icons created by Hight Quality Icons - Flaticon</a>
+* Seven: <a href="https://www.flaticon.com/free-icons/number" title="number icons">Number icons created by Hight Quality Icons - Flaticon</a>
+* Eight: <a href="https://www.flaticon.com/free-icons/number-8" title="number 8 icons">Number 8 icons created by Hight Quality Icons - Flaticon</a>
+* Nine: <a href="https://www.flaticon.com/free-icons/number-9" title="number 9 icons">Number 9 icons created by Hight Quality Icons - Flaticon</a>
 * Gold Color: https://pixabay.com/
 * Silver Color: https://www.pickpik.com/background-silver-glitter-glittering-background-texture-textured-4989
