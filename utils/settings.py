@@ -12,6 +12,7 @@ class Mode(Enum):
     """
     FREESTYLE = "freestyle"
     GAME = "game"
+    STICKER = "sticker"
 
 
 class LineStyle(Enum):

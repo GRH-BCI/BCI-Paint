@@ -227,6 +227,10 @@ def createMenu(win):
     win.modeMenu.addAction(game)
     game.triggered.connect(win.game)
 
+    sticker = QAction(QIcon(os.path.join("Assets", "sticker.png")), "Sticker", win)
+    win.modeMenu.addAction(sticker)
+    sticker.triggered.connect(win.sticker)
+
 
     # Creating options for clock speeds
     stopClock = QAction(QIcon(os.path.join("Assets", "stop.png")), "Stop", win)

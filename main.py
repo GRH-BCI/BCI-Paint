@@ -82,6 +82,17 @@ class Window(QMainWindow):
         # Initialize the mode to freestyle
         self.mode = Mode.FREESTYLE
 
+        # Set up the sticker placements (rows, columns, and coordinates allow for future flexibilty)
+        self.StickerIndices = ["number-1.png", "number-2.png", "number-3.png", "number-4", "number-5.png", "number-6.png", "number-7.png", "number-8.png", "number-9.png"]
+        self.stickerCoordinates = []
+        self.stickerRows = 3
+        self.stickerColumns = 3
+        self.currentStickerIndex = 0
+
+        self.stickerTimer = QTimer(self, interval=3000)
+        self.stickerTimer.timeout.connect(self.incrementStickerIndex)
+        self.stickerTimer.start()
+
         # Initialize feedback mode using the power level to off
         self.feedback = False
  
@@ -178,6 +189,34 @@ class Window(QMainWindow):
 
                     # Add a pause so the animation is visible
                     QTest.qWait(15)
+            elif self.mode == Mode.STICKER:
+                self.stickerTimer.stop()
+
+                # Get the image from the user
+                filename=None
+
+                if not filename:
+                    filename, _ = QFileDialog.getOpenFileName(self, 'Select Sticker' , QDir.currentPath(), 'Images (*.png *.jpg)')
+                if not filename:
+                    self.stickerTimer.start()
+                    return
+                
+                pixmap = QPixmap(filename)
+
+                # Scale the picture to the size of the grid cell if it is larger
+                if (pixmap.height() > self.image.height() // self.stickerRows):
+                    pixmap = pixmap.scaledToHeight(self.image.height() // self.stickerRows)
+                if (pixmap.width() > self.image.width() // self.stickerColumns):
+                    pixmap = pixmap.scaledToWidth(self.image.width() // self.stickerColumns)
+
+                # Set the coordinates of the picture to be centered in the grid cell
+                x = self.stickerCoordinates[self.currentStickerIndex][0] - pixmap.width() // 2
+                y = self.stickerCoordinates[self.currentStickerIndex][1] - pixmap.height() // 2
+
+                self.painter.drawPixmap(x, y, pixmap)
+
+                # Reset the timer
+                self.stickerTimer.start()
 
             # When the key press action finishes subtract 1 from the total currently active key presses being handled
             self.keyCount -= 1
@@ -209,20 +248,44 @@ class Window(QMainWindow):
 
         toolPainter.setPen(QPen(Qt.black, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
 
-        # Draw the animation around the brush
-        x2 = math.sin(2*math.pi*self.theta/360)*self.brushSize*2
-        y2 = math.cos(2*math.pi*self.theta/360)*self.brushSize*2
-        toolPainter.drawLine(QLineF(self.x + x2, self.y - y2, self.x + 2*x2, self.y - 2*y2))
+        if self.mode == Mode.STICKER:
+            # Cacluate positions to draw stickers based on the number of rows and columns
+            self.stickerCoordinates = []
+            for i in range(0, self.stickerRows):
+                for j in range(0, self.stickerColumns):
+                    x = (self.image.width() // self.stickerColumns) * j + (self.image.width() // self.stickerColumns) // 2
+                    y = (self.image.height() // self.stickerRows) * i + (self.image.height() // self.stickerRows) // 2
+                    self.stickerCoordinates.append([x, y])
 
-        # Draw the brush 
-        if self.blink:
-            toolPainter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-            brush = QBrush()
-            brush.setColor(QColor(self.brushColor))
-            brush.setStyle(Qt.SolidPattern)
-            toolPainter.setBrush(brush)
-            self.brush.moveCenter(QPointF(self.x, self.y))
-            toolPainter.drawEllipse(self.brush)
+            index = 0
+            for number in self.StickerIndices:
+                pixmap = QPixmap(os.path.join("Assets", number))
+
+                # Set the size of the number icon according to whether it is highlighted or not
+                if (index == self.currentStickerIndex):
+                    pixels = 128
+                else:
+                    pixels = 64
+                pixmap = pixmap.scaledToHeight(pixels)
+
+                toolPainter.drawPixmap(self.stickerCoordinates[index][0] - pixmap.width() // 2, self.stickerCoordinates[index][1] - pixmap.height() // 2, pixmap)
+
+                index += 1
+        else:
+            # Draw the animation around the brush
+            x2 = math.sin(2*math.pi*self.theta/360)*self.brushSize*2
+            y2 = math.cos(2*math.pi*self.theta/360)*self.brushSize*2
+            toolPainter.drawLine(QLineF(self.x + x2, self.y - y2, self.x + 2*x2, self.y - 2*y2))
+
+            # Draw the brush 
+            if self.blink:
+                toolPainter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+                brush = QBrush()
+                brush.setColor(QColor(self.brushColor))
+                brush.setStyle(Qt.SolidPattern)
+                toolPainter.setBrush(brush)
+                self.brush.moveCenter(QPointF(self.x, self.y))
+                toolPainter.drawEllipse(self.brush)
 
  
     # Handle the save canvas action
@@ -453,6 +516,13 @@ class Window(QMainWindow):
         self.allowKeyTimer.setInterval(1000) # Allow 1 key press every second
         self.disableSelection(self.modeMenu, "Game")
 
+    def sticker(self):
+        self.mode = Mode.STICKER
+        self.allowKeyTimer.setInterval(1000)
+        self.currentStickerIndex = 0
+        self.stickerTimer.start()
+        self.disableSelection(self.modeMenu, "Sticker")
+
     # Handle the clock speed actions
     def stopClock(self):
         self.step = 0
@@ -513,6 +583,9 @@ class Window(QMainWindow):
 
     def allowKeyPress(self):
         self.allowKey = True
+
+    def incrementStickerIndex(self):
+        self.currentStickerIndex = (self.currentStickerIndex + 1) % len(self.StickerIndices)
 
     # Disables the currently selected option in a menu
     def disableSelection(self, menu, actionName):
