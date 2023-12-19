@@ -37,6 +37,7 @@ class Window(QMainWindow):
         # Create an image to draw the tools overtop of the painting but not included in the painting
         self.imageTools = QImage(canvasSize, QImage.Format_ARGB32)
         self.imageTools.fill(QColor(255, 255, 255, 0))
+        self.toolColor = Qt.black
 
         # Initialize the angle for arrow and the rate of change of the angle
         self.theta = 0
@@ -246,7 +247,7 @@ class Window(QMainWindow):
 
         self.imageTools.fill(QColor(255, 255, 255, 0))
 
-        toolPainter.setPen(QPen(Qt.black, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+        toolPainter.setPen(QPen(self.toolColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
 
         if self.mode == Mode.STICKER:
             # Cacluate positions to draw stickers based on the number of rows and columns
@@ -504,6 +505,38 @@ class Window(QMainWindow):
     def dotted(self):
         self.lineStyle = LineStyle.DOTTED
         self.disableSelection(self.lStyleMenu, "Dotted")
+
+    # Handle the background actions
+    def whiteBackground(self):
+        self.image.fill(Qt.white)
+        self.toolColor = Qt.black
+        self.disableSelection(self.backgroundMenu, "White")
+
+    def blackBackground(self):
+        self.image.fill(Qt.black)
+        self.toolColor = Qt.white
+        self.disableSelection(self.backgroundMenu, "Black")
+
+    def customBackground(self):
+        color = QColorDialog.getColor(initial=Qt.white)
+
+        if color.isValid():
+            self.image.fill(QColor(color.red(), color.green(), color.blue(), self.alpha))
+
+            if (color.lightness() < 128):
+                self.toolColor = Qt.white
+            else:
+                self.toolColor = Qt.black
+
+            # Set the icon of the custom color to the selected color
+            colorIcon = QPixmap(50, 50)
+            colorIcon.fill(color)
+
+            for action in self.backgroundMenu.actions():
+                if action.text() == "Custom":
+                    action.setIcon(QIcon(colorIcon))
+
+            self.disableSelection(self.backgroundMenu, "")
 
     # Handle the mode actions
     def freestyle(self):
