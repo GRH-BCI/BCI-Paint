@@ -46,6 +46,10 @@ def createMenu(win):
     win.lStyleMenu = win.brushMenu.addMenu(QIcon(os.path.join("Assets", "line-style.png")), "Line Style")
     win.lStyleMenu.setFont(font)
 
+    # Adding a background selection to main menu
+    win.backgroundMenu = mainMenu.addMenu("\U0001F7E6 Background")
+    win.backgroundMenu.setFont(font)
+
     # Adding a mode selection to main menu
     win.modeMenu = mainMenu.addMenu("\U0001F3AE Mode")
     win.modeMenu.setFont(font)
@@ -216,6 +220,19 @@ def createMenu(win):
     win.lStyleMenu.addAction(dotted)
     dotted.triggered.connect(win.dotted)
 
+    # Creating options for backgrounds
+    whiteBackground = QAction(QIcon(os.path.join("Assets", "White.png")), "White", win)
+    win.backgroundMenu.addAction(whiteBackground)
+    whiteBackground.triggered.connect(win.whiteBackground)
+    whiteBackground.setDisabled(True)
+
+    blackBackground = QAction(QIcon(os.path.join("Assets", "Black.png")), "Black", win)
+    win.backgroundMenu.addAction(blackBackground)
+    blackBackground.triggered.connect(win.blackBackground)
+
+    customBackground = QAction("Custom", win)
+    win.backgroundMenu.addAction(customBackground)
+    customBackground.triggered.connect(win.customBackground)
 
     # Creating options game modes
     freestyle = QAction(QIcon(os.path.join("Assets", "freestyle.png")), "Freestyle", win)
