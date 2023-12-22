@@ -8,7 +8,7 @@
 <h3 align="center">BCI Paint</h3>
 
   <p align="center">
-    This is a repo for the BCI enabled painting program.
+    This is a repo for a BCI enabled painting app.
   </p>
 </div>
 
@@ -34,7 +34,7 @@
 </ol>
 
 # About the Project
-This project was developed for the Imagination Centre BCI Program at the Glenrose Rehabilitation Hospital. The purpose of this app is to enable people with severely limited physical mobility access to paint.
+This project was developed for the Imagination Centre BCI Program at the Glenrose Rehabilitation Hospital. The purpose of this app is to enable people with severely limited physical mobility access to paint digitally.
 
 <div align="center">
   <img src="docs/images/painting.png" width="500">
@@ -61,6 +61,13 @@ The Brush menu allows you to adjust the properties of the brush
   * **Brush Style:** style of the paint stroke
   * **Brush speed:** how far the brush moves in one stroke
   * **Line style:** solid or dotted paint stroke
+
+<img src="docs/images/BackgroundMenu.png" width="350">
+
+The Background menu allows you to fill the canvas with the selected color
+  * **White:** white canvas
+  * **Black:** black canvas
+  * **Custom:** opens a color picker which allows you to choose any color
 
 <img src="docs/images/ModeMenu.png" width="350">
 
