@@ -6,6 +6,7 @@ import sys
 import math
 import os
 import ctypes
+from decimal import Decimal
 from utils import *
  
 class Window(QMainWindow):
@@ -155,8 +156,8 @@ class Window(QMainWindow):
                 self.lastPoint = QPointF(self.x, self.y)
 
                 # Calculate the change in the x and y direction based on the angle
-                deltaX = math.sin(2*math.pi*self.theta/360)*self.brushSpeed
-                deltaY = math.cos(2*math.pi*self.theta/360)*self.brushSpeed
+                deltaX = math.sin(math.pi*self.theta/180)*self.brushSpeed
+                deltaY = math.cos(math.pi*self.theta/180)*self.brushSpeed
 
                 handleBrushMovement(self, event, deltaX, deltaY)
 
@@ -166,19 +167,34 @@ class Window(QMainWindow):
 
             elif self.mode == Mode.GAME:
                 # Calculate the change in the x and y direction based on the angle
-                deltaX = math.sin(2*math.pi*self.theta/360)*self.brushSpeed
-                deltaY = math.cos(2*math.pi*self.theta/360)*self.brushSpeed
+                deltaX = math.sin(math.pi*self.theta/180)*self.brushSpeed
+                deltaY = math.cos(math.pi*self.theta/180)*self.brushSpeed
+
+                loopLimit = 300 # The number of loops in the brush animation
+                strokeDist = Decimal(deltaX*deltaX + deltaY*deltaY).sqrt() # Distance the brush moves in one draw loop
+                a = strokeDist / (-loopLimit*loopLimit) # Calculate a in the formula for a parabola: y = a(x-h)^2+k or y = a(x+b)(x+c)
+                theta = self.theta # Capture the angle when the animation begins
 
                 self.brushSpeed = abs(self.brushSpeed)
 
-                for i in range(0, 300):
+                for t in range(0, loopLimit):
                     if self.painter.isActive() == False:
                         break
 
-                    # Slow the brush down over time
-                    if i > 150:
-                        deltaY = deltaY*0.99
-                        deltaX = deltaX*0.99
+                    # Each loop the stroke distance is shortened until it reaches 0
+                    strokeDist = a*(t-loopLimit)*(t+loopLimit)
+
+                    # Determine the sign of deltaX based on the previous value of deltaX
+                    if deltaX < 0:                        
+                        deltaX = -abs(math.sin(math.pi*theta/180)*float(strokeDist))
+                    else:
+                        deltaX = abs(math.sin(math.pi*theta/180)*float(strokeDist))
+
+                    # Determine the sign of deltaY based on the previous value of deltaY
+                    if deltaY < 0:
+                        deltaY = -abs(math.cos(math.pi*theta/180)*float(strokeDist))
+                    else:
+                        deltaY = abs(math.cos(math.pi*theta/180)*float(strokeDist))
         
                     # Change the last point
                     self.lastPoint = QPointF(self.x, self.y)
@@ -275,8 +291,8 @@ class Window(QMainWindow):
                 index += 1
         else:
             # Draw the animation around the brush
-            x2 = math.sin(2*math.pi*self.theta/360)*self.brushSize*2
-            y2 = math.cos(2*math.pi*self.theta/360)*self.brushSize*2
+            x2 = math.sin(math.pi*self.theta/180)*self.brushSize*2
+            y2 = math.cos(math.pi*self.theta/180)*self.brushSize*2
             toolPainter.drawLine(QLineF(self.x + x2, self.y - y2, self.x + 2*x2, self.y - 2*y2))
 
             # Draw the brush 
@@ -527,6 +543,7 @@ class Window(QMainWindow):
             self.backgroundColor = QColor(color.red(), color.green(), color.blue(), self.alpha)
             self.image.fill(self.backgroundColor)
 
+            # If the background is dark the tool color is white and if the background is light the tool color is black
             if (color.lightness() < 128):
                 self.toolColor = Qt.white
             else:
@@ -566,19 +583,23 @@ class Window(QMainWindow):
         self.disableSelection(self.clockSpeedMenu, "Stop")
 
     def cSlow(self):
-        self.step = 0.5
+        self.step = 1
+        self.angleTimer.setInterval(200)
         self.disableSelection(self.clockSpeedMenu, "Slow")
 
     def cMedium(self):
         self.step = 1
+        self.angleTimer.setInterval(100)
         self.disableSelection(self.clockSpeedMenu, "Medium")
 
     def cFast(self):
-        self.step = 2
+        self.step = 1
+        self.angleTimer.setInterval(50)
         self.disableSelection(self.clockSpeedMenu, "Fast")
 
     def cHyperspeed(self):
-        self.step = 10
+        self.step = 1
+        self.angleTimer.setInterval(10)
         self.disableSelection(self.clockSpeedMenu, "Hyperspeed")
 
     # Handle the BCI key actions
@@ -636,6 +657,9 @@ class Window(QMainWindow):
 # Set the icon in the task bar to match the window icon
 myappid = 'GRH_BCI_Paint' # arbitrary string
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
+QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True) # Enable highdpi scaling
+QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True) # Use highdpi icons
  
 # Create pyqt5 app
 App = QApplication(sys.argv)
