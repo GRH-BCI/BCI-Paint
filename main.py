@@ -32,7 +32,8 @@ class Window(QMainWindow):
         self.image = QImage(canvasSize, QImage.Format_RGB32)
  
         # Fill the canvas with white
-        self.image.fill(Qt.white)
+        self.backgroundColor = Qt.white
+        self.image.fill(self.backgroundColor)
 
         # Create an image to draw the tools overtop of the painting but not included in the painting
         self.imageTools = QImage(canvasSize, QImage.Format_ARGB32)
@@ -300,7 +301,7 @@ class Window(QMainWindow):
  
     # Handle the clear canvas action
     def clear(self):
-        self.image.fill(Qt.white)
+        self.image.fill(self.backgroundColor)
         self.update()
  
     # Handle the brush size actions
@@ -508,12 +509,14 @@ class Window(QMainWindow):
 
     # Handle the background actions
     def whiteBackground(self):
-        self.image.fill(Qt.white)
+        self.backgroundColor = Qt.white
+        self.image.fill(self.backgroundColor)
         self.toolColor = Qt.black
         self.disableSelection(self.backgroundMenu, "White")
 
     def blackBackground(self):
-        self.image.fill(Qt.black)
+        self.backgroundColor = Qt.black
+        self.image.fill(self.backgroundColor)
         self.toolColor = Qt.white
         self.disableSelection(self.backgroundMenu, "Black")
 
@@ -521,7 +524,8 @@ class Window(QMainWindow):
         color = QColorDialog.getColor(initial=Qt.white)
 
         if color.isValid():
-            self.image.fill(QColor(color.red(), color.green(), color.blue(), self.alpha))
+            self.backgroundColor = QColor(color.red(), color.green(), color.blue(), self.alpha)
+            self.image.fill(self.backgroundColor)
 
             if (color.lightness() < 128):
                 self.toolColor = Qt.white
